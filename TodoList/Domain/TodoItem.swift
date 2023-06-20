@@ -16,8 +16,15 @@ struct TodoItem {
     let createdAt: Date
     let changedAt: Date?
     
-    // Конструктор на все поля
-    init(id: String, text: String, importance: Importance, deadline: Date?, done: Bool, createdAt: Date, changedAt: Date?) {
+    init(
+        id: String = UUID().uuidString,
+        text: String,
+        importance: Importance,
+        deadline: Date? = nil,
+        done: Bool = false,
+        createdAt: Date = Date(),
+        changedAt: Date? = nil
+    ) {
         self.id = id
         self.text = text
         self.importance = importance
@@ -26,22 +33,18 @@ struct TodoItem {
         self.createdAt = createdAt
         self.changedAt = changedAt
     }
-    
-    // Конструктор для создания задачи пользователем в приложении
-    init(text: String, importance: Importance, deadline: Date?) {
-        self.init(
-            id: UUID().uuidString,
-            text: text,
-            importance: importance,
-            deadline: deadline,
-            done: false,
-            createdAt: Date(),
-            changedAt: nil
-        )
-    }
 }
 
-// Для удобства тестировании
+extension TodoItem {
+    private static let kId = "id"
+    private static let kText = "text"
+    private static let kImportance = "importance"
+    private static let kDeadline = "deadline"
+    private static let kDone = "done"
+    private static let kCreatedAt = "created_at"
+    private static let kChangedAt = "changed_at"
+}
+
 extension TodoItem: Equatable {
     static func == (lhs: TodoItem, rhs: TodoItem) -> Bool {
         return
@@ -58,41 +61,39 @@ extension TodoItem: Equatable {
 extension TodoItem {
     var json: Any {
         var dict: [String: Any?] = [
-            "id": id,
-            "text": text,
-            "importance": importance.rawValue,
-            "deadline": deadline?.timeIntervalSince1970,
-            "done": done,
-            "created_at": createdAt.timeIntervalSince1970,
-            "changed_at": changedAt?.timeIntervalSince1970
+            Self.kId: id,
+            Self.kText: text,
+            Self.kImportance: importance.rawValue,
+            Self.kDeadline: deadline?.timeIntervalSince1970,
+            Self.kDone: done,
+            Self.kCreatedAt: createdAt.timeIntervalSince1970,
+            Self.kChangedAt: changedAt?.timeIntervalSince1970
         ]
         // По заданию если .basic, то сохранять не надо
         if importance == .basic {
-            dict.removeValue(forKey: "importance")
+            dict.removeValue(forKey: Self.kImportance)
         }
         // Также убираем из словаря все nil значения и возвращаем
         return dict.compactMapValues { $0 }
     }
     
     static func parse(json: Any) -> TodoItem? {
-        guard let dict = json as? [String: Any] else { return nil }
+        guard let dict = json as? [String: Any] else {
+            return nil
+        }
         
-        guard let id = dict["id"] as? String else { return nil }
-        guard let text = dict["text"] as? String else { return nil }
+        guard
+            let id = dict[kId] as? String,
+            let text = dict[kText] as? String,
+            let createdAt =  (dict[kCreatedAt] as? TimeInterval).flatMap({ Date(timeIntervalSince1970: $0) })
+        else {
+            return nil
+        }
         
-        let done = dict["done"] as? Bool ?? false
-        
-        let importanceRaw = dict["importance"] as? Importance.RawValue ?? Importance.basic.rawValue
-        let importance = Importance(rawValue: importanceRaw) ?? .basic
-        
-        let deadlineUnix = dict["deadline"] as? TimeInterval
-        let deadline = deadlineUnix == nil ? nil : Date(timeIntervalSince1970: deadlineUnix!)
-        
-        guard let createdAtUnix = dict["created_at"] as? TimeInterval else { return nil }
-        let createdAt = Date(timeIntervalSince1970: createdAtUnix)
-        
-        let changedAtUnix = dict["changed_at"] as? TimeInterval
-        let changedAt = changedAtUnix == nil ? nil : Date(timeIntervalSince1970: changedAtUnix!)
+        let done = dict[kDone] as? Bool ?? false
+        let importance = (dict[kImportance] as? String).flatMap({ Importance(rawValue: $0) }) ?? .basic
+        let deadline = (dict[kDeadline] as? TimeInterval).flatMap({ Date(timeIntervalSince1970: $0) })
+        let changedAt = (dict[kChangedAt] as? TimeInterval).flatMap({ Date(timeIntervalSince1970: $0) })
         
         return self.init(
             id: id,
@@ -109,12 +110,8 @@ extension TodoItem {
 extension TodoItem {
     private static let csvDelimiter = ","
     
-    /*
-     Храним здесь, чтобы в случае изменения/добавления полей TodoItem
-     было проще все отредактировать в одном месте
-     */
     static let csvTableHeader = [
-        "id", "text", "importance", "deadline", "done", "created_at", "changed_at"
+        kId, kText, kImportance, kDeadline, kDone, kCreatedAt, kChangedAt
     ].lazy.joined(separator: "\(csvDelimiter) ")
 
     var csv: String {
