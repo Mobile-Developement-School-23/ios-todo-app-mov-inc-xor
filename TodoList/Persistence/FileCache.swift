@@ -3,19 +3,18 @@ import Foundation
 class FileCache {
     typealias Id = String
     
-    /*
-     Коллекция для хранения items. Порядок нам не важен, как говорили в Техническом чате.
-     Судя по всему, для поддержания порядка будем использовать сортировку по полю createdAt
-     */
     private(set) var items: [Id: TodoItem] = [:]
     
-    func add(item: TodoItem) {
-        // Если такого itema не было, то добавляем, иначе перезаписываем
+    @discardableResult
+    func add(item: TodoItem) -> TodoItem? {
+        let oldItem = items[item.id]
         items[item.id] = item
+        return oldItem
     }
     
-    func remove(with id: String) {
-        items.removeValue(forKey: id)
+    @discardableResult
+    func remove(with id: String) -> TodoItem? {
+        return items.removeValue(forKey: id)
     }
     
     func clear() {
