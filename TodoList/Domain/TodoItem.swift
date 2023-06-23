@@ -15,6 +15,7 @@ struct TodoItem {
     let done: Bool
     let createdAt: Date
     let changedAt: Date?
+    let hexColor: String?
     
     init(
         id: String = UUID().uuidString,
@@ -23,7 +24,8 @@ struct TodoItem {
         deadline: Date? = nil,
         done: Bool = false,
         createdAt: Date = Date(),
-        changedAt: Date? = nil
+        changedAt: Date? = nil,
+        hexColor: String? = nil
     ) {
         self.id = id
         self.text = text
@@ -32,6 +34,7 @@ struct TodoItem {
         self.done = done
         self.createdAt = createdAt
         self.changedAt = changedAt
+        self.hexColor = hexColor
     }
 }
 
@@ -43,6 +46,7 @@ extension TodoItem {
     private static let kDone = "done"
     private static let kCreatedAt = "created_at"
     private static let kChangedAt = "changed_at"
+    private static let kHexColor = "hex_color"
 }
 
 extension TodoItem: Equatable {
@@ -54,7 +58,8 @@ extension TodoItem: Equatable {
             lhs.deadline?.timeIntervalSince1970 == rhs.deadline?.timeIntervalSince1970 &&
             lhs.done == rhs.done &&
             lhs.createdAt.timeIntervalSince1970 == rhs.createdAt.timeIntervalSince1970 &&
-            lhs.changedAt?.timeIntervalSince1970 == rhs.changedAt?.timeIntervalSince1970
+            lhs.changedAt?.timeIntervalSince1970 == rhs.changedAt?.timeIntervalSince1970 &&
+            lhs.hexColor == rhs.hexColor
     }
 }
 
@@ -67,7 +72,8 @@ extension TodoItem {
             Self.kDeadline: deadline?.timeIntervalSince1970,
             Self.kDone: done,
             Self.kCreatedAt: createdAt.timeIntervalSince1970,
-            Self.kChangedAt: changedAt?.timeIntervalSince1970
+            Self.kChangedAt: changedAt?.timeIntervalSince1970,
+            Self.kHexColor: hexColor,
         ]
         // По заданию если .basic, то сохранять не надо
         if importance == .basic {
@@ -94,6 +100,7 @@ extension TodoItem {
         let importance = (dict[kImportance] as? String).flatMap({ Importance(rawValue: $0) }) ?? .basic
         let deadline = (dict[kDeadline] as? TimeInterval).flatMap({ Date(timeIntervalSince1970: $0) })
         let changedAt = (dict[kChangedAt] as? TimeInterval).flatMap({ Date(timeIntervalSince1970: $0) })
+        let hexColor = dict[kHexColor] as? String
         
         return self.init(
             id: id,
@@ -102,7 +109,8 @@ extension TodoItem {
             deadline: deadline,
             done: done,
             createdAt: createdAt,
-            changedAt: changedAt
+            changedAt: changedAt,
+            hexColor: hexColor
         )
     }
 }
@@ -111,7 +119,7 @@ extension TodoItem {
     private static let csvDelimiter = ","
     
     static let csvTableHeader = [
-        kId, kText, kImportance, kDeadline, kDone, kCreatedAt, kChangedAt
+        kId, kText, kImportance, kDeadline, kDone, kCreatedAt, kChangedAt, kHexColor
     ].lazy.joined(separator: "\(csvDelimiter) ")
 
     var csv: String {
@@ -123,6 +131,7 @@ extension TodoItem {
             "\(done)",
             "\(createdAt.timeIntervalSince1970)",
             changedAt != nil ? "\(changedAt!.timeIntervalSince1970)" : "",
+            hexColor ?? ""
         ]
         return fields.joined(separator: "\(Self.csvDelimiter) ")
     }
@@ -185,6 +194,11 @@ extension TodoItem {
             }
         } transform: { $0 == "" ? nil : Date(timeIntervalSince1970: TimeInterval($0)!) }
         
+        let hexColor = Reference(String?.self)
+        let hexColorCapture = TryCapture(as: hexColor) {
+            /#[A-F0-9]{6}/
+        } transform: { String($0) }
+        
         // Разделитель в нашем регулярном выражении
         let and = try! Regex("\(csvDelimiter)\\s*")
         
@@ -205,6 +219,8 @@ extension TodoItem {
             createdAtCapture
             and
             changedAtCapture
+            and
+            hexColorCapture
         }
         
         if let result = try? regex.wholeMatch(in: csv) {
@@ -215,7 +231,8 @@ extension TodoItem {
                 deadline: result[deadline],
                 done: result[done],
                 createdAt: result[createdAt],
-                changedAt: result[changedAt]
+                changedAt: result[changedAt],
+                hexColor: result[hexColor]
             )
         }
         
