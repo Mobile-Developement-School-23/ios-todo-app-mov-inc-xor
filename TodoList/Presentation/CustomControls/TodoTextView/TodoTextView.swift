@@ -1,10 +1,9 @@
 import UIKit
 
 class TodoTextView: UITextView, UITextViewDelegate {
-    private let padding = UIEdgeInsets(top: 17, left: 16, bottom: 17, right: 16)
+    var viewModel: TodoTextViewModel
     
-    var onTextViewDidBeginEditing: (() -> ())?
-    var didChangeText: ((_ text: String) -> ())?
+    private let padding = UIEdgeInsets(top: 17, left: 16, bottom: 17, right: 16)
     
     private lazy var placeholderLabel: UILabel = {
         let placeholder = UILabel()
@@ -16,14 +15,40 @@ class TodoTextView: UITextView, UITextViewDelegate {
         return placeholder
     }()
     
-    override init(frame: CGRect, textContainer: NSTextContainer?) {
-        super.init(frame: frame, textContainer: textContainer)
+    init(viewModel: TodoTextViewModel) {
+        self.viewModel = viewModel
+        super.init(frame: .null, textContainer: nil)
+        
+        bind()
         setup()
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setup()
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        let text = String(textView.text.trimmingPrefix(/\s*/))
+        placeholderLabel.isHidden = !text.isEmpty
+        viewModel.didChangeText?(text)
+    }
+
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        viewModel.onTextViewDidBeginEditing?()
+    }
+}
+
+extension TodoTextView {
+    private func bind() {
+        viewModel.text.bind { [weak self] in
+            let text = String($0.trimmingPrefix(/\s*/))
+            self?.text = text
+            self?.placeholderLabel.isHidden = !text.isEmpty
+        }
+        
+        viewModel.color.bind { [weak self] in
+            self?.textColor = $0
+        }
     }
     
     private func setup() {
@@ -32,7 +57,7 @@ class TodoTextView: UITextView, UITextViewDelegate {
         font = UIFont.systemFont(ofSize: 17)
         textContainerInset = padding
         backgroundColor = R.Colors.featureBackground
-        textColor = R.Colors.text
+        textColor = viewModel.color.value
         layer.cornerRadius = 16
         textContainer.lineFragmentPadding = 0
         isScrollEnabled = false
@@ -43,19 +68,5 @@ class TodoTextView: UITextView, UITextViewDelegate {
             placeholderLabel.topAnchor.constraint(equalTo: topAnchor, constant: padding.top),
             placeholderLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding.left),
         ])
-    }
-    
-    func setText(_ text: String) {
-        self.text = text
-        placeholderLabel.isHidden = !text.isEmpty
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        placeholderLabel.isHidden = !text.isEmpty
-        didChangeText?(text)
-    }
-
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        onTextViewDidBeginEditing?()
     }
 }

@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F308C5A2A4BD8A500A9AC79 /* TodoTextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F308C592A4BD8A500A9AC79 /* TodoTextViewModel.swift */; };
 		4F429C672A3C9A7300B3C6D7 /* FileCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F429C662A3C9A7300B3C6D7 /* FileCacheTests.swift */; };
 		4F44B7422A41893100667616 /* TodoTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F44B7412A41893100667616 /* TodoTextView.swift */; };
+		4F5071BB2A4AEE36009B77AF /* TodoSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5071BA2A4AEE35009B77AF /* TodoSwitch.swift */; };
+		4F5071BD2A4AF331009B77AF /* TodoSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5071BC2A4AF331009B77AF /* TodoSegmentedControl.swift */; };
 		4F55B27A2A43181C006B944F /* TodoCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F55B2792A43181C006B944F /* TodoCalendarView.swift */; };
 		4F5DC5AC2A421D0F0045F8B4 /* R.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5DC5AB2A421D0F0045F8B4 /* R.swift */; };
 		4F5DC5B02A422BF90045F8B4 /* ImportanceOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5DC5AF2A422BF90045F8B4 /* ImportanceOptionView.swift */; };
@@ -18,7 +21,6 @@
 		4F7AB57E2A39E9520077AA6C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AB57D2A39E9520077AA6C /* SceneDelegate.swift */; };
 		4F7AB5862A39E9520077AA6C /* TodoList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AB5842A39E9520077AA6C /* TodoList.xcdatamodeld */; };
 		4F7AB5882A39E9540077AA6C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F7AB5872A39E9540077AA6C /* Assets.xcassets */; };
-		4F7AB58B2A39E9540077AA6C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F7AB5892A39E9540077AA6C /* LaunchScreen.storyboard */; };
 		4F7AB5962A39E9550077AA6C /* TodoItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AB5952A39E9550077AA6C /* TodoItemTests.swift */; };
 		4F7AB5A02A39E9550077AA6C /* TodoListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AB59F2A39E9550077AA6C /* TodoListUITests.swift */; };
 		4F7AB5A22A39E9550077AA6C /* TodoListUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AB5A12A39E9550077AA6C /* TodoListUITestsLaunchTests.swift */; };
@@ -58,8 +60,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4F308C592A4BD8A500A9AC79 /* TodoTextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTextViewModel.swift; sourceTree = "<group>"; };
 		4F429C662A3C9A7300B3C6D7 /* FileCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCacheTests.swift; sourceTree = "<group>"; };
 		4F44B7412A41893100667616 /* TodoTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTextView.swift; sourceTree = "<group>"; };
+		4F5071BA2A4AEE35009B77AF /* TodoSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSwitch.swift; sourceTree = "<group>"; };
+		4F5071BC2A4AF331009B77AF /* TodoSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSegmentedControl.swift; sourceTree = "<group>"; };
 		4F55B2792A43181C006B944F /* TodoCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCalendarView.swift; sourceTree = "<group>"; };
 		4F5DC5AB2A421D0F0045F8B4 /* R.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = R.swift; sourceTree = "<group>"; };
 		4F5DC5AF2A422BF90045F8B4 /* ImportanceOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportanceOptionView.swift; sourceTree = "<group>"; };
@@ -70,7 +75,6 @@
 		4F7AB57D2A39E9520077AA6C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		4F7AB5852A39E9520077AA6C /* TodoList.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TodoList.xcdatamodel; sourceTree = "<group>"; };
 		4F7AB5872A39E9540077AA6C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4F7AB58A2A39E9540077AA6C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4F7AB58C2A39E9540077AA6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4F7AB5912A39E9550077AA6C /* TodoListTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TodoListTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F7AB5952A39E9550077AA6C /* TodoItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemTests.swift; sourceTree = "<group>"; };
@@ -123,33 +127,39 @@
 		4F0AE0512A3A694600B7A259 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				4F7AB5842A39E9520077AA6C /* TodoList.xcdatamodeld */,
 				4F7AB5B02A39E9B70077AA6C /* FileCache.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
 		};
-		4F55B2782A431807006B944F /* TodoCalendar */ = {
+		4F308C582A4BD89400A9AC79 /* TodoTextView */ = {
 			isa = PBXGroup;
 			children = (
-				4F55B2792A43181C006B944F /* TodoCalendarView.swift */,
+				4F44B7412A41893100667616 /* TodoTextView.swift */,
+				4F308C592A4BD8A500A9AC79 /* TodoTextViewModel.swift */,
 			);
-			path = TodoCalendar;
+			path = TodoTextView;
+			sourceTree = "<group>";
+		};
+		4F5071B92A4AEE06009B77AF /* CustomControls */ = {
+			isa = PBXGroup;
+			children = (
+				4F308C582A4BD89400A9AC79 /* TodoTextView */,
+				4F55B2792A43181C006B944F /* TodoCalendarView.swift */,
+				4F5071BA2A4AEE35009B77AF /* TodoSwitch.swift */,
+				4F5071BC2A4AF331009B77AF /* TodoSegmentedControl.swift */,
+			);
+			path = CustomControls;
 			sourceTree = "<group>";
 		};
 		4F5DC5AA2A421CF40045F8B4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4F7AB5872A39E9540077AA6C /* Assets.xcassets */,
 				4F5DC5AB2A421D0F0045F8B4 /* R.swift */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		4F5DC5AD2A4229970045F8B4 /* TodoTextView */ = {
-			isa = PBXGroup;
-			children = (
-				4F44B7412A41893100667616 /* TodoTextView.swift */,
-			);
-			path = TodoTextView;
 			sourceTree = "<group>";
 		};
 		4F5DC5AE2A422BCA0045F8B4 /* Options */ = {
@@ -194,10 +204,6 @@
 				4FDF8E0C2A4153070027C8F2 /* Application */,
 				4F0AE0512A3A694600B7A259 /* Persistence */,
 				4F7AB5AE2A39E9910077AA6C /* Domain */,
-				4F7AB5872A39E9540077AA6C /* Assets.xcassets */,
-				4F7AB5892A39E9540077AA6C /* LaunchScreen.storyboard */,
-				4F7AB58C2A39E9540077AA6C /* Info.plist */,
-				4F7AB5842A39E9520077AA6C /* TodoList.xcdatamodeld */,
 			);
 			path = TodoList;
 			sourceTree = "<group>";
@@ -293,10 +299,8 @@
 		4FD96CE82A415A5D00098CD2 /* Details */ = {
 			isa = PBXGroup;
 			children = (
-				4F55B2782A431807006B944F /* TodoCalendar */,
 				4FCAAB762A44AAA2009EEB18 /* ColorPicker */,
 				4F5DC5AE2A422BCA0045F8B4 /* Options */,
-				4F5DC5AD2A4229970045F8B4 /* TodoTextView */,
 				4FDF8E102A4154B60027C8F2 /* DetailsViewController.swift */,
 				4FD96CE92A415C5E00098CD2 /* DetailsViewModel.swift */,
 			);
@@ -316,6 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				4F7AB57B2A39E9520077AA6C /* AppDelegate.swift */,
+				4F7AB58C2A39E9540077AA6C /* Info.plist */,
 				4F7AB57D2A39E9520077AA6C /* SceneDelegate.swift */,
 			);
 			path = Application;
@@ -324,6 +329,7 @@
 		4FDF8E0D2A41546F0027C8F2 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				4F5071B92A4AEE06009B77AF /* CustomControls */,
 				4FD96CE82A415A5D00098CD2 /* Details */,
 			);
 			path = Presentation;
@@ -433,7 +439,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F7AB58B2A39E9540077AA6C /* LaunchScreen.storyboard in Resources */,
 				4F7AB5882A39E9540077AA6C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -460,6 +465,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F5DC5B42A42318A0045F8B4 /* OptionsView.swift in Sources */,
+				4F308C5A2A4BD8A500A9AC79 /* TodoTextViewModel.swift in Sources */,
 				4FCAAB732A43EF3B009EEB18 /* Alerts.swift in Sources */,
 				4FCAAB7C2A44D13B009EEB18 /* HSLColorSliderView.swift in Sources */,
 				4FCAAB8C2A4510A8009EEB18 /* OptionsViewModel.swift in Sources */,
@@ -468,6 +474,7 @@
 				4F7AB5B12A39E9B70077AA6C /* TodoItem.swift in Sources */,
 				4F7AB57C2A39E9520077AA6C /* AppDelegate.swift in Sources */,
 				4F7AB57E2A39E9520077AA6C /* SceneDelegate.swift in Sources */,
+				4F5071BD2A4AF331009B77AF /* TodoSegmentedControl.swift in Sources */,
 				4FCAAB822A44F80E009EEB18 /* HSLColorPickerViewModel.swift in Sources */,
 				4FD96CEA2A415C5E00098CD2 /* DetailsViewModel.swift in Sources */,
 				4F55B27A2A43181C006B944F /* TodoCalendarView.swift in Sources */,
@@ -480,6 +487,7 @@
 				4FCAAB8E2A451316009EEB18 /* ImportanceOptionViewModel.swift in Sources */,
 				4FCAAB7A2A44AB05009EEB18 /* HSLColorPickerView.swift in Sources */,
 				4F5DC5B22A422ECB0045F8B4 /* DeadlineOptionView.swift in Sources */,
+				4F5071BB2A4AEE36009B77AF /* TodoSwitch.swift in Sources */,
 				4FCAAB882A450C50009EEB18 /* UIColor + Extension.swift in Sources */,
 				4FCAAB852A4500EB009EEB18 /* ColorOptionViewModel.swift in Sources */,
 				4F5DC5B02A422BF90045F8B4 /* ImportanceOptionView.swift in Sources */,
@@ -519,17 +527,6 @@
 			targetProxy = 4F7AB59C2A39E9550077AA6C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		4F7AB5892A39E9540077AA6C /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4F7AB58A2A39E9540077AA6C /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		4F7AB5A32A39E9550077AA6C /* Debug */ = {
@@ -655,7 +652,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2VPL3U3QQ9;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TodoList/Info.plist;
+				INFOPLIST_FILE = TodoList/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -682,7 +679,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2VPL3U3QQ9;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TodoList/Info.plist;
+				INFOPLIST_FILE = TodoList/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

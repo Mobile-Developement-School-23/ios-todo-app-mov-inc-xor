@@ -3,10 +3,12 @@ import UIKit
 class HSLColorSliderView: UIView {
     var viewModel: HSLColorSliderViewModel
     
+    private static let height: CGFloat = 25
+    
     private lazy var cursorLayer: CALayer = {
         let cursor = CALayer()
         cursor.borderColor = UIColor.white.cgColor
-        cursor.borderWidth = 2
+        cursor.borderWidth = 5
         return cursor
     }()
     
@@ -34,37 +36,17 @@ class HSLColorSliderView: UIView {
     
     override func layoutSubviews() {
         gradientLayer.frame.size.width = frame.width
-        gradientLayer.frame.size.height = frame.height//intrinsicContentSize.height
+        gradientLayer.frame.size.height = Self.height
 
         let cursorX = viewModel.positionToCoordinate(
             sliderLenght: self.gradientLayer.frame.width,
             cursorDiameter: self.cursorLayer.frame.width
         )
         
-        cursorLayer.frame = CGRect(x: cursorX, y: 0, width: frame.height, height: frame.height)
+        cursorLayer.frame = CGRect(x: cursorX, y: 4, width: Self.height - 8, height: Self.height - 8)
         
-        gradientLayer.cornerRadius = gradientLayer.frame.height / 2
+        gradientLayer.cornerRadius = Self.height / 2
         cursorLayer.cornerRadius = cursorLayer.frame.height / 2
-    }
-    
-    private func setup() {
-        layer.addSublayer(gradientLayer)
-        gradientLayer.addSublayer(cursorLayer)
-    }
-    
-    private func bind() {
-        viewModel.position.bind { [weak self] position in
-            guard let self else { return }
-            let x = self.viewModel.positionToCoordinate(
-                sliderLenght: self.gradientLayer.frame.width,
-                cursorDiameter: self.cursorLayer.frame.width
-            )
-            self.cursorLayer.frame.origin.x = x
-        }
-        
-        viewModel.settedParameters.bind { [weak self] _ in
-            self?.gradientLayer.colors = self?.viewModel.gradient
-        }
     }
     
     private func setupGestureRecognizers() {
@@ -86,5 +68,31 @@ class HSLColorSliderView: UIView {
         viewModel.position.value = position
         viewModel.didChangePosition?(position)
         CATransaction.commit()
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height)
+    }
+}
+
+extension HSLColorSliderView {
+    private func bind() {
+        viewModel.position.bind { [weak self] position in
+            guard let self else { return }
+            let x = self.viewModel.positionToCoordinate(
+                sliderLenght: self.gradientLayer.frame.width,
+                cursorDiameter: self.cursorLayer.frame.width
+            )
+            self.cursorLayer.frame.origin.x = x
+        }
+        
+        viewModel.settedParameters.bind { [weak self] _ in
+            self?.gradientLayer.colors = self?.viewModel.gradient
+        }
+    }
+    
+    private func setup() {
+        layer.addSublayer(gradientLayer)
+        gradientLayer.addSublayer(cursorLayer)
     }
 }

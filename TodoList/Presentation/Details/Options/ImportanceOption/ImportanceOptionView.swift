@@ -11,7 +11,7 @@ class ImportanceOptionView: UIView {
         return label
     }()
     
-    private lazy var segmentedControl: UISegmentedControl = {
+    private lazy var segmentedControl: TodoSegmentedControl = {
         let items: [Any] = [
             R.Images.lowImportanceIcon.withRenderingMode(.alwaysOriginal),
             "нет",
@@ -23,26 +23,18 @@ class ImportanceOptionView: UIView {
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)
         ]
         
-        let segmentedControl = UISegmentedControl(items: items)
-        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        segmentedControl.selectedSegmentIndex = index(from: viewModel.importance.value)
-        segmentedControl.setTitleTextAttributes(textAttributes, for:.normal)
-        
-        segmentedControl.addAction(UIAction { [weak self] in
-            guard
-                let self,
-                let sender = ($0.sender as? UISegmentedControl)
-            else {
+        let action = UIAction { [weak self] in
+            guard let self, let sender = ($0.sender as? UISegmentedControl) else {
                 return
             }
             self.viewModel.didChangeImportance?(self.importance(from: sender.selectedSegmentIndex))
-            self.setSegmentedControlBackground(segmentedControl)
-        }, for: .valueChanged)
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.setSegmentedControlBackground(segmentedControl)
         }
         
+        let segmentedControl = TodoSegmentedControl(items: items)
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentedControl.selectedSegmentIndex = index(from: viewModel.importance.value)
+        segmentedControl.setTitleTextAttributes(textAttributes, for:.normal)
+        segmentedControl.addAction(action, for: .valueChanged)
         return segmentedControl
     }()
     
@@ -68,25 +60,6 @@ class ImportanceOptionView: UIView {
         }
     }
     
-    // Хак для установки корректного цвета фона
-    func setSegmentedControlBackground(_ segmentedControl: UISegmentedControl) {
-        segmentedControl.backgroundColor = R.Colors.segmentedControlBackground
-        segmentedControl.selectedSegmentTintColor = R.Colors.selectedSegmentedControl
-        
-        for i in 0..<3 {
-            segmentedControl.subviews[i].isHidden = true
-        }
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            self.setSegmentedControlBackground(self.segmentedControl)
-        }
-    }
-    
     init(viewModel: ImportanceOptionViewModel) {
         self.viewModel = viewModel
         super.init(frame: .null)
@@ -107,6 +80,7 @@ class ImportanceOptionView: UIView {
             
             segmentedControl.trailingAnchor.constraint(equalTo: trailingAnchor),
             segmentedControl.centerYAnchor.constraint(equalTo: centerYAnchor),
+            segmentedControl.widthAnchor.constraint(equalToConstant: 150),
         ])
     }
 }
