@@ -43,7 +43,7 @@ class HSLColorPickerView: UIView {
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
         stack.distribution = .equalSpacing
-        stack.spacing = 10
+        stack.spacing = 13
         stack.alignment = .center
         return stack
     }()
@@ -59,31 +59,9 @@ class HSLColorPickerView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private func setup() {
-        contentView.addArrangedSubview(hueColorSlider)
-        contentView.addArrangedSubview(saturationColorSlider)
-        contentView.addArrangedSubview(lightnessColorSlider)
-        
-        addSubview(contentView)
-        
-        NSLayoutConstraint.activate([
-            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            contentView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            contentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            
-            hueColorSlider.widthAnchor.constraint(equalTo: contentView.widthAnchor),
-            hueColorSlider.heightAnchor.constraint(equalToConstant: 30),
-            
-            saturationColorSlider.widthAnchor.constraint(equalTo: contentView.widthAnchor),
-            saturationColorSlider.heightAnchor.constraint(equalToConstant: 30),
-            
-            lightnessColorSlider.widthAnchor.constraint(equalTo: contentView.widthAnchor),
-            lightnessColorSlider.heightAnchor.constraint(equalToConstant: 30),
-        ])
-    }
-    
+}
+
+extension HSLColorPickerView {
     private func bind() {
         hueColorSlider.viewModel.didChangePosition = { [weak self] in
             guard let viewModel = self?.viewModel else { return }
@@ -123,5 +101,26 @@ class HSLColorPickerView: UIView {
             
             self?.lightnessColorSlider.viewModel.position.value = $0
         }
+    }
+}
+
+extension HSLColorPickerView {
+    private func setup() {
+        contentView.addArrangedSubview(hueColorSlider)
+        contentView.addArrangedSubview(saturationColorSlider)
+        contentView.addArrangedSubview(lightnessColorSlider)
+        
+        addSubview(contentView)
+        
+        NSLayoutConstraint.activate([
+            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            contentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+            
+            hueColorSlider.widthAnchor.constraint(equalTo: contentView.widthAnchor),
+            saturationColorSlider.widthAnchor.constraint(equalTo: contentView.widthAnchor),
+            lightnessColorSlider.widthAnchor.constraint(equalTo: contentView.widthAnchor),
+        ])
     }
 }

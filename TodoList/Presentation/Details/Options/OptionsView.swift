@@ -18,8 +18,22 @@ class OptionsView: UIView {
         return color
     }()
     
+    private lazy var colorPickerContainerHeightConstraint: NSLayoutConstraint = {
+        let constraint = colorPickerContainer.heightAnchor.constraint(equalToConstant: 0)
+        constraint.isActive = true
+        return constraint
+    }()
+
+    // Необходим для анимированного появления HSLColorPickerView
+    private lazy var colorPickerContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.clipsToBounds = true
+        return view
+    }()
+    
     private(set) lazy var colorPickerView: HSLColorPickerView = {
-        let colorPicker = HSLColorPickerView(viewModel: HSLColorPickerViewModel(color: colorOptionView.viewModel.color.value))
+        let colorPicker = HSLColorPickerView(viewModel: HSLColorPickerViewModel(color: .blue))
         colorPicker.translatesAutoresizingMaskIntoConstraints = false
         colorPicker.isHidden = true
         return colorPicker
@@ -33,11 +47,11 @@ class OptionsView: UIView {
     }()
     
     @objc func didTapDeadline() {
-        viewModel.didTapDate?()
+        viewModel.didTapDeadlineOption?()
     }
     
     @objc func didTapColorOption() {
-        setColorPickerVisibility(colorPickerView.isHidden)
+        viewModel.didTapColorOption?()
     }
     
     private var separator: UIView {
@@ -61,7 +75,7 @@ class OptionsView: UIView {
         DispatchQueue.main.async {
             calendarView.isHidden = true
         }
-        
+        calendarView.clipsToBounds = true
         return calendarView
     }()
     
@@ -101,16 +115,25 @@ class OptionsView: UIView {
         if visibility == colorPickerVisibility {
             return
         }
-//        UIView.animate(withDuration: 0.3) { [weak self] in
-            colorPickerView.isHidden = !visibility
-            separatorBeforeColorPicker.isHidden = !visibility
-//        }
+        colorPickerView.isHidden = false
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            guard let self else { return }
+            self.separatorBeforeColorPicker.isHidden = !visibility
+            self.colorPickerContainerHeightConstraint.constant = visibility ? self.colorPickerView.frame.height : 0
+            self.viewModel.updateSuperviewLayout?()
+        } completion: { [weak self] _ in
+            self?.colorPickerView.isHidden = !visibility
+        }
     }
-    
+}
+
+extension OptionsView {
     private func bind() {
-        viewModel.color.bind { [weak self] in
-            self?.colorOptionView.viewModel.color.value = $0
-            self?.colorPickerView.viewModel.setColor($0)
+        viewModel.color.bind { [weak self] color in
+            self?.colorOptionView.viewModel.color.value = color
+            if let color {
+                self?.colorPickerView.viewModel.setColor(color)
+            }
         }
         
         viewModel.importance.bind { [weak self] in
@@ -120,12 +143,10 @@ class OptionsView: UIView {
         viewModel.deadline.bind { [weak self] in
             self?.deadlineOptionView.viewModel.date.value = $0
         }
-        
-        colorPickerView.viewModel.didChangedColor = { [weak self] in
-            self?.colorOptionView.viewModel.color.value = $0
-        }
     }
-    
+}
+
+extension OptionsView {
     private func setup() {
         separatorBeforeCalendar = separator
         separatorBeforeColorPicker = separator
@@ -138,7 +159,9 @@ class OptionsView: UIView {
         contentView.addArrangedSubview(colorOptionView)
         
         contentView.addArrangedSubview(separatorBeforeColorPicker)
-        contentView.addArrangedSubview(colorPickerView)
+        
+        colorPickerContainer.addSubview(colorPickerView)
+        contentView.addArrangedSubview(colorPickerContainer)
         
         contentView.addArrangedSubview(separator)
         contentView.addArrangedSubview(deadlineOptionView)
@@ -157,6 +180,9 @@ class OptionsView: UIView {
             deadlineOptionView.heightAnchor.constraint(equalToConstant: Self.cellHeight),
             
             calendarView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            
+            colorPickerContainerHeightConstraint,
+            colorPickerView.widthAnchor.constraint(equalTo: colorPickerContainer.widthAnchor),
             
             heightAnchor.constraint(equalTo: contentView.heightAnchor)
         ])
