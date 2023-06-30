@@ -58,7 +58,7 @@ class OptionsView: UIView {
         let separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
         separator.backgroundColor = R.Colors.separator
-        separator.heightAnchor.constraint(equalToConstant: 1.0).isActive = true
+        separator.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.scale).isActive = true
         return separator
     }
     
@@ -69,13 +69,14 @@ class OptionsView: UIView {
     private(set) lazy var calendarView: TodoCalendarView = {
         let calendarView = TodoCalendarView()
         calendarView.translatesAutoresizingMaskIntoConstraints = false
+        calendarView.clipsToBounds = true
         
         // Хак, чтобы убрать первую анимацию появления календаря
         calendarView.isHidden = false
-        DispatchQueue.main.async {
-            calendarView.isHidden = true
+        DispatchQueue.main.async { [weak calendarView] in
+            calendarView?.isHidden = true
         }
-        calendarView.clipsToBounds = true
+        
         return calendarView
     }()
     
