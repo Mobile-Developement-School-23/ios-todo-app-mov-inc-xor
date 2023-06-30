@@ -59,9 +59,10 @@ class DetailsViewController: UIViewController {
     private lazy var textView: TodoTextView = {
         let textColor = UIColor.colorWithHexString(hexString: viewModel.hexColor.value ?? R.Colors.text?.hex() ?? "#000000")
         
-        let textField = TodoTextView(viewModel: TodoTextViewModel(text: viewModel.text.value, color: textColor))
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        return textField
+        let textView = TodoTextView(viewModel: TodoTextViewModel(text: viewModel.text.value, color: textColor))
+        textView.translatesAutoresizingMaskIntoConstraints = false
+//        textView.becomeFirstResponder()
+        return textView
     }()
     
     private lazy var optionsView: OptionsView = {
@@ -165,7 +166,7 @@ class DetailsViewController: UIViewController {
     }
     
     private func setupView() {
-        view.backgroundColor = R.Colors.appBackground
+        view.backgroundColor = R.Colors.modalBackground
         
         title = "Дело"
         navigationItem.leftBarButtonItem = leftBarButtonItem
@@ -178,6 +179,17 @@ class DetailsViewController: UIViewController {
         scrollView.addSubview(contentView)
         
         view.addSubview(scrollView)
+    }
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.willTransition(to: newCollection, with: coordinator)
+        if UIDevice.current.orientation.isLandscape {
+            optionsView.isHidden = true
+            removeButton.isHidden = true
+        } else {
+            optionsView.isHidden = false
+            removeButton.isHidden = false
+        }
     }
 }
 

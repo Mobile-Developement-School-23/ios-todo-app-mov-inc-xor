@@ -5,6 +5,8 @@ final class DetailsViewModel {
     private(set) var editingMode: Box<Bool>
     private let todoItem: TodoItem
     
+    var changesCompletion: (() -> ())?
+    
     let text: Box<String>
     let importance: Box<TodoItem.Importance>
     let deadline: Box<Date?>
@@ -36,6 +38,8 @@ final class DetailsViewModel {
         try? fileCache.importJson(filename: R.fileStorageName)
         fileCache.add(item: item)
         try fileCache.exportJson(filename: R.fileStorageName)
+        
+        changesCompletion?()
     }
     
     func remove() throws {
@@ -49,5 +53,7 @@ final class DetailsViewModel {
         try fileCache.exportJson(filename: R.fileStorageName)
         
         self.editingMode.value = false
+        
+        changesCompletion?()
     }
 }
