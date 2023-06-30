@@ -1,17 +1,17 @@
 import Foundation
 
 final class DetailsViewModel {
-    
+
     private(set) var editingMode: Box<Bool>
     private let todoItem: TodoItem
-    
-    var changesCompletion: (() -> ())?
-    
+
+    var changesCompletion: (() -> Void)?
+
     let text: Box<String>
     let importance: Box<TodoItem.Importance>
     let deadline: Box<Date?>
     let hexColor: Box<String?>
-    
+
     init(item: TodoItem? = nil) {
         self.editingMode = Box(item != nil)
         self.todoItem = item ?? TodoItem(text: "", importance: .basic)
@@ -21,7 +21,7 @@ final class DetailsViewModel {
         self.deadline = Box(self.todoItem.deadline)
         self.hexColor = Box(self.todoItem.hexColor)
     }
-    
+
     func save() throws {
         let item = TodoItem(
             id: todoItem.id,
@@ -38,22 +38,22 @@ final class DetailsViewModel {
         try? fileCache.importJson(filename: R.fileStorageName)
         fileCache.add(item: item)
         try fileCache.exportJson(filename: R.fileStorageName)
-        
+
         changesCompletion?()
     }
-    
+
     func remove() throws {
         if !editingMode.value {
             return
         }
-        
+
         let fileCache = FileCache()
         try? fileCache.importJson(filename: R.fileStorageName)
         fileCache.remove(with: todoItem.id)
         try fileCache.exportJson(filename: R.fileStorageName)
-        
+
         self.editingMode.value = false
-        
+
         changesCompletion?()
     }
 }

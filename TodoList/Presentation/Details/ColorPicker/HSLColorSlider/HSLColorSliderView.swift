@@ -2,16 +2,16 @@ import UIKit
 
 class HSLColorSliderView: UIView {
     var viewModel: HSLColorSliderViewModel
-    
+
     private static let height: CGFloat = 25
-    
+
     private lazy var cursorLayer: CALayer = {
         let cursor = CALayer()
         cursor.borderColor = UIColor.white.cgColor
         cursor.borderWidth = 5
         return cursor
     }()
-    
+
     private lazy var gradientLayer: CAGradientLayer = {
         let gradient = CAGradientLayer()
         gradient.colors = viewModel.gradient
@@ -20,11 +20,11 @@ class HSLColorSliderView: UIView {
         gradient.cornerRadius = 16
         return gradient
     }()
-    
+
     init(viewModel: HSLColorSliderViewModel) {
         self.viewModel = viewModel
         super.init(frame: .null)
-        
+
         setup()
         bind()
         setupGestureRecognizers()
@@ -33,7 +33,7 @@ class HSLColorSliderView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         gradientLayer.frame.size.width = frame.width
         gradientLayer.frame.size.height = Self.height
@@ -42,24 +42,24 @@ class HSLColorSliderView: UIView {
             sliderLenght: self.gradientLayer.frame.width,
             cursorDiameter: self.cursorLayer.frame.width
         )
-        
+
         cursorLayer.frame = CGRect(x: cursorX, y: 4, width: Self.height - 8, height: Self.height - 8)
-        
+
         gradientLayer.cornerRadius = Self.height / 2
         cursorLayer.cornerRadius = cursorLayer.frame.height / 2
     }
-    
+
     private func setupGestureRecognizers() {
         addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture)))
     }
-    
+
     @objc private func handlePanGesture(_ sender: UIPanGestureRecognizer) {
         let point = sender.location(in: self)
         let midX = point.x - cursorLayer.frame.width / 2
 
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        
+
         let position = viewModel.coordinateToPosition(
             sliderCoordinate: midX,
             sliderLenght: gradientLayer.frame.width,
@@ -69,7 +69,7 @@ class HSLColorSliderView: UIView {
         viewModel.didChangePosition?(position)
         CATransaction.commit()
     }
-    
+
     override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: Self.height)
     }
@@ -77,20 +77,20 @@ class HSLColorSliderView: UIView {
 
 extension HSLColorSliderView {
     private func bind() {
-        viewModel.position.bind { [weak self] position in
+        viewModel.position.bind { [weak self] _ in
             guard let self else { return }
-            let x = self.viewModel.positionToCoordinate(
+            let originX = self.viewModel.positionToCoordinate(
                 sliderLenght: self.gradientLayer.frame.width,
                 cursorDiameter: self.cursorLayer.frame.width
             )
-            self.cursorLayer.frame.origin.x = x
+            self.cursorLayer.frame.origin.x = originX
         }
-        
+
         viewModel.settedParameters.bind { [weak self] _ in
             self?.gradientLayer.colors = self?.viewModel.gradient
         }
     }
-    
+
     private func setup() {
         layer.addSublayer(gradientLayer)
         gradientLayer.addSublayer(cursorLayer)

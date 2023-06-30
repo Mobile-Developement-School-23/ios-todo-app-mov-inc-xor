@@ -1,21 +1,25 @@
 import UIKit
+import CocoaLumberjackSwift
 
 class DetailsViewController: UIViewController {
     var viewModel: DetailsViewModel
-    
+
     init(viewModel: DetailsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+
+        DDLogDebug("\(Self.description()) init")
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
+        DDLogDebug("\(Self.description()) deinit")
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private lazy var leftBarButtonItem: UIBarButtonItem = {
         let action = UIAction { [weak self] _ in
             self?.dismiss(animated: true)
@@ -23,7 +27,7 @@ class DetailsViewController: UIViewController {
         let button = UIBarButtonItem(title: "Отменить", primaryAction: action)
         return button
     }()
-    
+
     private lazy var rightBarButtonItem: UIBarButtonItem = {
         let action = UIAction { [weak self] _ in
             guard let self else { return }
@@ -40,7 +44,7 @@ class DetailsViewController: UIViewController {
         button.isEnabled = !textView.viewModel.text.value.isEmpty
         return button
     }()
-    
+
     private lazy var contentView: UIStackView = {
         let stack = UIStackView()
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -49,39 +53,39 @@ class DetailsViewController: UIViewController {
         stack.spacing = 16
         return stack
     }()
-    
+
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
-    
+
     private lazy var textView: TodoTextView = {
         let textColor = UIColor.colorWithHexString(hexString: viewModel.hexColor.value ?? R.Colors.text?.hex() ?? "#000000")
-        
+
         let textView = TodoTextView(viewModel: TodoTextViewModel(text: viewModel.text.value, color: textColor))
         textView.translatesAutoresizingMaskIntoConstraints = false
 //        textView.becomeFirstResponder()
         return textView
     }()
-    
+
     private lazy var optionsView: OptionsView = {
         let vm = OptionsViewModel(
             importance: viewModel.importance.value,
             color: viewModel.hexColor.value.flatMap({ UIColor.colorWithHexString(hexString: $0) }),
             deadline: viewModel.deadline.value
         )
-        
+
         let optionsView = OptionsView(viewModel: vm)
         optionsView.translatesAutoresizingMaskIntoConstraints = false
         optionsView.backgroundColor = R.Colors.featureBackground
         optionsView.layer.cornerRadius = 16
         return optionsView
     }()
-    
+
     private lazy var removeButton: UIButton = {
         let action = UIAction { [weak self] _ in
-            let handler: (UIAlertAction) -> () = { [weak self] _ in
+            let handler: (UIAlertAction) -> Void = { [weak self] _ in
                 do {
                     try self?.viewModel.remove()
                 } catch {
@@ -90,12 +94,12 @@ class DetailsViewController: UIViewController {
                 }
                 self?.dismiss(animated: true)
             }
-            
+
             let alert = Alerts.makeConfirmAlert(
                 title: "Удаление",
                 message: "Вы действительно хотите удалить задачу?",
                 handler: handler)
-            
+
             self?.present(alert, animated: true)
         }
 
@@ -117,28 +121,28 @@ class DetailsViewController: UIViewController {
         addKeyboardObservers()
         addGestureRecognizers()
         setupView()
-        setupConstraints() 
+        setupConstraints()
     }
-    
+
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
         // Скрываем клавиатуру
         textView.endEditing(true)
-        
+
         let touchPoint = gesture.location(in: self.view)
-        
+
         // Если касание было вне календаря, то скрываем его
         let convertedToCalendarPoint = self.view.convert(touchPoint, to: optionsView.calendarView)
         if !optionsView.calendarView.bounds.contains(convertedToCalendarPoint) {
             optionsView.setCalendarVisibility(false)
         }
-        
+
         // Если касание было вне Color Picker, то скрываем его
         let convertedToColorPickerPoint = self.view.convert(touchPoint, to: optionsView.colorPickerView)
         if !optionsView.colorPickerView.bounds.contains(convertedToColorPickerPoint) {
             optionsView.setColorPickerVisibility(false)
         }
     }
-    
+
     @objc private func keyboardWillShow(_ notification: Notification) {
         guard
             let userInfo = notification.userInfo,
@@ -148,39 +152,39 @@ class DetailsViewController: UIViewController {
         }
         scrollView.contentInset.bottom += keyboardFrame.height - 22
     }
-    
+
     @objc private func keyboardWillHide(_ notification: Notification) {
         let contentInset = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
     }
-    
+
     private func addKeyboardObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
+
     private func addGestureRecognizers() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
-    
+
     private func setupView() {
         view.backgroundColor = R.Colors.modalBackground
-        
+
         title = "Дело"
         navigationItem.leftBarButtonItem = leftBarButtonItem
         navigationItem.rightBarButtonItem = rightBarButtonItem
-        
+
         contentView.addArrangedSubview(textView)
         contentView.addArrangedSubview(optionsView)
         contentView.addArrangedSubview(removeButton)
-        
+
         scrollView.addSubview(contentView)
-        
+
         view.addSubview(scrollView)
     }
-    
+
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
         if UIDevice.current.orientation.isLandscape {
@@ -198,15 +202,15 @@ extension DetailsViewController {
         viewModel.editingMode.bind { [weak self] in
             self?.removeButton.isEnabled = $0
         }
-        
+
         viewModel.text.bind { [weak self] in
             self?.textView.viewModel.text.value = $0
         }
-        
+
         viewModel.importance.bind { [weak self] in
             self?.optionsView.importanceOptionView.viewModel.importance.value = $0
         }
-        
+
         viewModel.deadline.bind { [weak self] in
             self?.optionsView.deadlineOptionView.viewModel.date.value = $0
             guard let date = $0 else { return }
@@ -214,40 +218,40 @@ extension DetailsViewController {
             let calendarSelection = (self?.optionsView.calendarView.selectionBehavior as? UICalendarSelectionSingleDate)
             calendarSelection?.setSelected(dc, animated: true)
         }
-        
+
         textView.viewModel.didChangeText = { [weak self] in
             self?.viewModel.text.value = $0
             self?.rightBarButtonItem.isEnabled = !$0.isEmpty
         }
-        
+
         textView.viewModel.onTextViewDidBeginEditing = { [weak self] in
             self?.optionsView.setCalendarVisibility(false)
             self?.optionsView.setColorPickerVisibility(false)
         }
-        
+
         optionsView.importanceOptionView.viewModel.didChangeImportance = { [weak self] in
             self?.viewModel.importance.value = $0
         }
-        
+
         optionsView.calendarView.didChangeDate = { [weak self] in
             self?.optionsView.setCalendarVisibility(false)
             self?.viewModel.deadline.value = $0
         }
-        
+
         optionsView.deadlineOptionView.viewModel.didChangeSwitchValue = { [weak self] enabled in
             if !enabled {
                 self?.optionsView.setCalendarVisibility(false)
             }
-            
+
             let nextDate = Calendar.current.date(byAdding: DateComponents(day: 1), to: Date()) ?? Date()
-            
+
             let dc = Calendar.current.dateComponents([.year, .month, .day], from: nextDate)
             let calendarSelection = (self?.optionsView.calendarView.selectionBehavior as? UICalendarSelectionSingleDate)
             calendarSelection?.setSelected(dc, animated: true)
-            
+
             self?.viewModel.deadline.value = enabled ? nextDate : nil
         }
-        
+
         optionsView.viewModel.didTapDeadlineOption = { [weak self] in
             guard let self else { return }
             if self.optionsView.deadlineOptionView.viewModel.date.value != nil {
@@ -255,7 +259,7 @@ extension DetailsViewController {
             }
             self.view.endEditing(true)
         }
-        
+
         optionsView.viewModel.didTapColorOption = { [weak self] in
             guard let self else { return }
             if self.optionsView.colorOptionView.viewModel.color.value != nil {
@@ -263,11 +267,11 @@ extension DetailsViewController {
             }
             self.view.endEditing(true)
         }
-        
+
         optionsView.viewModel.updateSuperviewLayout = { [weak self] in
             self?.view.layoutIfNeeded()
         }
-        
+
         optionsView.colorOptionView.viewModel.didChangeSwitchValue = { [weak self] enabled in
             if !enabled {
                 self?.optionsView.setColorPickerVisibility(false)
@@ -279,7 +283,7 @@ extension DetailsViewController {
             self?.textView.viewModel.color.value = (enabled ? color : R.Colors.text) ?? .black
             self?.viewModel.hexColor.value = enabled ? color.hex() : nil
         }
-        
+
         optionsView.colorPickerView.viewModel.didChangedColor = { [weak self] in
             self?.optionsView.colorOptionView.viewModel.color.value = $0
             self?.textView.viewModel.color.value = $0
@@ -295,16 +299,16 @@ extension DetailsViewController {
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        
+
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32),
-            
+
             textView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120),
-            
-            removeButton.heightAnchor.constraint(equalToConstant: 56),
+
+            removeButton.heightAnchor.constraint(equalToConstant: 56)
         ])
     }
 }

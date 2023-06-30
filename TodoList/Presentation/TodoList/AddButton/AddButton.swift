@@ -10,38 +10,38 @@ class AddButton: UIButton {
 
         return layer
     }()
-    
+
     private lazy var addButtonImageView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.image = R.Images.addButton
         return view
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
-    
+
     override func layoutSubviews() {
         shadowLayer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 22).cgPath
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setup() {
         layer.insertSublayer(shadowLayer, at: 0)
-        
+
         addSubview(addButtonImageView)
 
         NSLayoutConstraint.activate([
             widthAnchor.constraint(equalToConstant: 44),
             heightAnchor.constraint(equalToConstant: 44),
-            
+
             addButtonImageView.widthAnchor.constraint(equalTo: widthAnchor),
-            addButtonImageView.heightAnchor.constraint(equalTo: heightAnchor),
+            addButtonImageView.heightAnchor.constraint(equalTo: heightAnchor)
         ])
     }
 }

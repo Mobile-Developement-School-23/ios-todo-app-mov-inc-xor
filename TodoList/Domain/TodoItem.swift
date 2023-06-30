@@ -7,7 +7,7 @@ struct TodoItem {
         case basic
         case important
     }
-    
+
     let id: String
     let text: String
     let importance: Importance
@@ -16,7 +16,7 @@ struct TodoItem {
     let createdAt: Date
     let changedAt: Date?
     let hexColor: String?
-    
+
     init(
         id: String = UUID().uuidString,
         text: String,
@@ -73,7 +73,7 @@ extension TodoItem {
             Self.kDone: done,
             Self.kCreatedAt: createdAt.timeIntervalSince1970,
             Self.kChangedAt: changedAt?.timeIntervalSince1970,
-            Self.kHexColor: hexColor,
+            Self.kHexColor: hexColor
         ]
         // По заданию если .basic, то сохранять не надо
         if importance == .basic {
@@ -82,12 +82,12 @@ extension TodoItem {
         // Также убираем из словаря все nil значения и возвращаем
         return dict.compactMapValues { $0 }
     }
-    
+
     static func parse(json: Any) -> TodoItem? {
         guard let dict = json as? [String: Any] else {
             return nil
         }
-        
+
         guard
             let id = dict[kId] as? String,
             let text = dict[kText] as? String,
@@ -95,13 +95,13 @@ extension TodoItem {
         else {
             return nil
         }
-        
+
         let done = dict[kDone] as? Bool ?? false
         let importance = (dict[kImportance] as? String).flatMap({ Importance(rawValue: $0) }) ?? .basic
         let deadline = (dict[kDeadline] as? TimeInterval).flatMap({ Date(timeIntervalSince1970: $0) })
         let changedAt = (dict[kChangedAt] as? TimeInterval).flatMap({ Date(timeIntervalSince1970: $0) })
         let hexColor = dict[kHexColor] as? String
-        
+
         return self.init(
             id: id,
             text: text,
@@ -117,7 +117,7 @@ extension TodoItem {
 
 extension TodoItem {
     private static let csvDelimiter = ","
-    
+
     static let csvTableHeader = [
         kId, kText, kImportance, kDeadline, kDone, kCreatedAt, kChangedAt, kHexColor
     ].lazy.joined(separator: "\(csvDelimiter) ")
@@ -135,25 +135,25 @@ extension TodoItem {
         ]
         return fields.joined(separator: "\(Self.csvDelimiter) ")
     }
-    
+
     static func parse(csv: String) -> TodoItem? {
         /*
          Так как split по разделителю не подходит ввиду того,
          что он может содержаться в поле text, используем регулярные выражения
         */
-        
+
         // id может состоять из любых печатаемых символов, т.к. задается не только как UUID().uuidString
         let id = Reference(String.self)
         let idCapture = TryCapture(as: id) {
             OneOrMore { .anyGraphemeCluster }
         } transform: { String($0) }
-        
+
         // text может содержать любые символы
         let text = Reference(String.self)
         let textCapture = TryCapture(as: text) {
             OneOrMore { .any }
         } transform: { String($0).replacing("\"\"", with: "\"") }
-        
+
         // Может быть "important", "low" или пустой строкой, т.к. .basic мы не сохраняем
         let importance = Reference(Importance.self)
         let importanceCapture = TryCapture(as: importance) {
@@ -163,7 +163,7 @@ extension TodoItem {
                 ""
             }
         } transform: { $0 == "" ? .basic : Importance(rawValue: String($0)) }
-        
+
         // Либо вещественное значение, либо пусто
         let deadline = Reference(Date?.self)
         let deadlineCapture = TryCapture(as: deadline) {
@@ -172,7 +172,7 @@ extension TodoItem {
                 ""
             }
         } transform: { $0 == "" ? nil : Date(timeIntervalSince1970: TimeInterval($0)!) }
-        
+
         let done = Reference(Bool.self)
         let doneCapture = TryCapture(as: done) {
             ChoiceOf {
@@ -180,12 +180,12 @@ extension TodoItem {
                 "false"
             }
         } transform: { Bool(String($0)) }
-        
+
         let createdAt = Reference(Date.self)
         let createdAtCapture = TryCapture(as: createdAt) {
             /\d+\.\d+/
         } transform: { Date(timeIntervalSince1970: TimeInterval($0)!) }
-        
+
         let changedAt = Reference(Date?.self)
         let changedAtCapture = TryCapture(as: changedAt) {
             ChoiceOf {
@@ -193,15 +193,17 @@ extension TodoItem {
                 ""
             }
         } transform: { $0 == "" ? nil : Date(timeIntervalSince1970: TimeInterval($0)!) }
-        
+
         let hexColor = Reference(String?.self)
         let hexColorCapture = TryCapture(as: hexColor) {
-            /#[A-F0-9]{6}/
+            /#[A-F0-9] {6}/
         } transform: { String($0) }
-        
+
         // Разделитель в нашем регулярном выражении
-        let and = try! Regex("\(csvDelimiter)\\s*")
-        
+        guard let and = try? Regex("\(csvDelimiter)\\s*") else {
+            return nil
+        }
+
         // Шаблон, по которому разбирается вся строка csv-таблицы
         let regex = Regex {
             idCapture
@@ -222,7 +224,7 @@ extension TodoItem {
             and
             hexColorCapture
         }
-        
+
         if let result = try? regex.wholeMatch(in: csv) {
             return TodoItem(
                 id: result[id],
@@ -235,7 +237,7 @@ extension TodoItem {
                 hexColor: result[hexColor]
             )
         }
-        
+
         return nil
     }
 }

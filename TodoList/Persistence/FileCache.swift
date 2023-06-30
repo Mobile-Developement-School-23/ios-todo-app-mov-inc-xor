@@ -2,25 +2,25 @@ import Foundation
 
 class FileCache {
     typealias Id = String
-    
+
     private(set) var items: [Id: TodoItem] = [:]
-    
+
     @discardableResult
     func add(item: TodoItem) -> TodoItem? {
         let oldItem = items[item.id]
         items[item.id] = item
         return oldItem
     }
-    
+
     @discardableResult
     func remove(with id: String) -> TodoItem? {
         return items.removeValue(forKey: id)
     }
-    
+
     func clear() {
         items = [:]
     }
-    
+
     private static func getDocumentPath(filename: String) -> URL {
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         return path.appending(path: filename)
@@ -41,7 +41,7 @@ extension FileCache {
 
         items.forEach { add(item: $0) }
     }
-    
+
     func exportJson(filename: String) throws {
         let url = Self.getDocumentPath(filename: filename)
         let data = try JSONSerialization.data(withJSONObject: items.values.map { $0.json })
@@ -54,10 +54,10 @@ extension FileCache {
         let url = Self.getDocumentPath(filename: filename)
         let csv = try String(contentsOf: url)
         let items = csv.split(separator: "\n")[1...].map(String.init).compactMap { TodoItem.parse(csv: $0) }
-        
+
         items.forEach { add(item: $0) }
     }
-    
+
     func exportCsv(filename: String) throws {
         let url = Self.getDocumentPath(filename: filename)
         let header = TodoItem.csvTableHeader

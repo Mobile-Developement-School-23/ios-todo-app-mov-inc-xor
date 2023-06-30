@@ -2,9 +2,9 @@ import UIKit
 
 class TodoTextView: UITextView, UITextViewDelegate {
     var viewModel: TodoTextViewModel
-    
+
     private let padding = UIEdgeInsets(top: 17, left: 16, bottom: 17, right: 16)
-    
+
     private lazy var placeholderLabel: UILabel = {
         let placeholder = UILabel()
         placeholder.translatesAutoresizingMaskIntoConstraints = false
@@ -14,19 +14,19 @@ class TodoTextView: UITextView, UITextViewDelegate {
         placeholder.isHidden = !text.isEmpty
         return placeholder
     }()
-    
+
     init(viewModel: TodoTextViewModel) {
         self.viewModel = viewModel
         super.init(frame: .null, textContainer: nil)
-        
+
         bind()
         setup()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func textViewDidChange(_ textView: UITextView) {
         let text = String(textView.text.trimmingPrefix(/\s*/))
         placeholderLabel.isHidden = !text.isEmpty
@@ -45,15 +45,15 @@ extension TodoTextView {
             self?.text = text
             self?.placeholderLabel.isHidden = !text.isEmpty
         }
-        
+
         viewModel.color.bind { [weak self] in
             self?.textColor = $0
         }
     }
-    
+
     private func setup() {
         delegate = self
-        
+
         font = UIFont.systemFont(ofSize: 17)
         textContainerInset = padding
         backgroundColor = R.Colors.featureBackground
@@ -61,12 +61,12 @@ extension TodoTextView {
         layer.cornerRadius = 16
         textContainer.lineFragmentPadding = 0
         isScrollEnabled = false
-        
+
         addSubview(placeholderLabel)
-        
+
         NSLayoutConstraint.activate([
             placeholderLabel.topAnchor.constraint(equalTo: topAnchor, constant: padding.top),
-            placeholderLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding.left),
+            placeholderLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding.left)
         ])
     }
 }
