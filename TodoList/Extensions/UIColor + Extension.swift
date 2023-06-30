@@ -4,14 +4,14 @@ extension UIColor {
     // https://stackoverflow.com/questions/26341008/how-to-convert-uicolor-to-hex-and-display-in-nslog
     func hex() -> String {
         let components = self.cgColor.components
-        let r: CGFloat = components?[0] ?? 0.0
-        let g: CGFloat = components?[1] ?? 0.0
-        let b: CGFloat = components?[2] ?? 0.0
+        let red: CGFloat = components?[0] ?? 0.0
+        let green: CGFloat = components?[1] ?? 0.0
+        let blue: CGFloat = components?[2] ?? 0.0
 
-        let hexString = String.init(format: "#%02lX%02lX%02lX", lroundf(Float(r * 255)), lroundf(Float(g * 255)), lroundf(Float(b * 255)))
+        let hexString = String.init(format: "#%02lX%02lX%02lX", lroundf(Float(red * 255)), lroundf(Float(green * 255)), lroundf(Float(blue * 255)))
         return hexString
      }
-    
+
     private static func colorComponentFrom(colorString: String, start: Int, length: Int) -> CGFloat {
         let startIndex = colorString.index(colorString.startIndex, offsetBy: start)
         let endIndex = colorString.index(startIndex, offsetBy: length)
@@ -22,12 +22,12 @@ extension UIColor {
         guard Scanner(string: String(fullHexString)).scanHexInt64(&hexComponent) else {
             return 0
         }
-        
+
         let hexFloat: CGFloat = CGFloat(hexComponent)
         let floatValue: CGFloat = CGFloat(hexFloat / 255.0)
         return floatValue
     }
-    
+
     static func colorWithHexString(hexString: String) -> UIColor {
         var colorString = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
         colorString = colorString.replacingOccurrences(of: "#", with: "").uppercased()

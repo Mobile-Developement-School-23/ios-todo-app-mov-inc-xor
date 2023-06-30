@@ -22,8 +22,8 @@ class TodoSegmentedControl: UISegmentedControl {
         backgroundColor = R.Colors.segmentedControlBackground
         selectedSegmentTintColor = R.Colors.selectedSegmentedControl
 
-        for i in 0..<3 {
-            subviews[i].isHidden = true
+        for idx in 0..<3 {
+            subviews[idx].isHidden = true
         }
     }
 }

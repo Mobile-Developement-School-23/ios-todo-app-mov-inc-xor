@@ -4,11 +4,11 @@ final class OptionsViewModel {
     let importance: Box<TodoItem.Importance>
     let color: Box<UIColor?>
     let deadline: Box<Date?>
-    
-    var didTapDeadlineOption: (() -> ())?
-    var didTapColorOption: (() -> ())?
-    var updateSuperviewLayout: (() -> ())?
-    
+
+    var didTapDeadlineOption: (() -> Void)?
+    var didTapColorOption: (() -> Void)?
+    var updateSuperviewLayout: (() -> Void)?
+
     init(importance: TodoItem.Importance, color: UIColor?, deadline: Date?) {
         self.importance = Box(importance)
         self.color = Box(color)
