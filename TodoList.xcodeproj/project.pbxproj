@@ -25,6 +25,7 @@
 		4F5DC5B02A422BF90045F8B4 /* ImportanceOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5DC5AF2A422BF90045F8B4 /* ImportanceOptionView.swift */; };
 		4F5DC5B22A422ECB0045F8B4 /* DeadlineOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5DC5B12A422ECB0045F8B4 /* DeadlineOptionView.swift */; };
 		4F5DC5B42A42318A0045F8B4 /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5DC5B32A42318A0045F8B4 /* OptionsView.swift */; };
+		4F6A9EF02A56EF22000DA229 /* URLSession + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6A9EEF2A56EF22000DA229 /* URLSession + Extension.swift */; };
 		4F7AB57C2A39E9520077AA6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AB57B2A39E9520077AA6C /* AppDelegate.swift */; };
 		4F7AB57E2A39E9520077AA6C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AB57D2A39E9520077AA6C /* SceneDelegate.swift */; };
 		4F7AB5882A39E9540077AA6C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F7AB5872A39E9540077AA6C /* Assets.xcassets */; };
@@ -84,6 +85,7 @@
 		4F5DC5AF2A422BF90045F8B4 /* ImportanceOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportanceOptionView.swift; sourceTree = "<group>"; };
 		4F5DC5B12A422ECB0045F8B4 /* DeadlineOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadlineOptionView.swift; sourceTree = "<group>"; };
 		4F5DC5B32A42318A0045F8B4 /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
+		4F6A9EEF2A56EF22000DA229 /* URLSession + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession + Extension.swift"; sourceTree = "<group>"; };
 		4F7AB5782A39E9520077AA6C /* TodoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F7AB57B2A39E9520077AA6C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4F7AB57D2A39E9520077AA6C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -336,6 +338,7 @@
 			isa = PBXGroup;
 			children = (
 				4FCAAB872A450C50009EEB18 /* UIColor + Extension.swift */,
+				4F6A9EEF2A56EF22000DA229 /* URLSession + Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -571,6 +574,7 @@
 				4F7AB57E2A39E9520077AA6C /* SceneDelegate.swift in Sources */,
 				4F5071BD2A4AF331009B77AF /* TodoSegmentedControl.swift in Sources */,
 				4FCAAB822A44F80E009EEB18 /* HSLColorPickerViewModel.swift in Sources */,
+				4F6A9EF02A56EF22000DA229 /* URLSession + Extension.swift in Sources */,
 				4F09309F2A4DCAA900F94D89 /* AddTodoItemCellContentView.swift in Sources */,
 				4FD96CEA2A415C5E00098CD2 /* DetailsViewModel.swift in Sources */,
 				4F55B27A2A43181C006B944F /* TodoCalendarView.swift in Sources */,
@@ -684,6 +688,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
 			};
 			name = Debug;
 		};
@@ -737,6 +742,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -763,6 +769,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ru.yandex.TodoList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = minimal;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -790,6 +797,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ru.yandex.TodoList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = minimal;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
