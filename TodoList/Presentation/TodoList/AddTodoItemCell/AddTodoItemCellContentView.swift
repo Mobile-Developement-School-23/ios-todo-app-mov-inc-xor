@@ -26,7 +26,7 @@ class AddTodoItemCellContentView: UIView & UIContentView {
 
 extension AddTodoItemCellContentView {
     private func setup() {
-        backgroundColor = R.Colors.featureBackground
+        backgroundColor = Res.Colors.featureBackground
 
         addSubview(textField)
 

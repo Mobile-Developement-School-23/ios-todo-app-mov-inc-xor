@@ -19,8 +19,8 @@ class TodoSegmentedControl: UISegmentedControl {
 
     // Хак для установки корректного цвета фона
     func setSegmentedControlBackground() {
-        backgroundColor = R.Colors.segmentedControlBackground
-        selectedSegmentTintColor = R.Colors.selectedSegmentedControl
+        backgroundColor = Res.Colors.segmentedControlBackground
+        selectedSegmentTintColor = Res.Colors.selectedSegmentedControl
 
         for idx in 0..<3 {
             subviews[idx].isHidden = true

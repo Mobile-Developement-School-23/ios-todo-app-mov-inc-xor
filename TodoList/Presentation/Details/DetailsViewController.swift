@@ -1,5 +1,4 @@
 import UIKit
-import CocoaLumberjackSwift
 
 class DetailsViewController: UIViewController {
     var viewModel: DetailsViewModel
@@ -7,13 +6,10 @@ class DetailsViewController: UIViewController {
     init(viewModel: DetailsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-
-        DDLogDebug("\(Self.description()) init")
     }
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-        DDLogDebug("\(Self.description()) deinit")
     }
 
     required init?(coder: NSCoder) {
@@ -61,7 +57,8 @@ class DetailsViewController: UIViewController {
     }()
 
     private lazy var textView: TodoTextView = {
-        let textColor = UIColor.colorWithHexString(hexString: viewModel.hexColor.value ?? R.Colors.text?.hex() ?? "#000000")
+        let hexString = viewModel.hexColor.value ?? Res.Colors.text?.hex() ?? "#000000"
+        let textColor = UIColor.colorWithHexString(hexString: hexString)
 
         let textView = TodoTextView(viewModel: TodoTextViewModel(text: viewModel.text.value, color: textColor))
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -70,15 +67,15 @@ class DetailsViewController: UIViewController {
     }()
 
     private lazy var optionsView: OptionsView = {
-        let vm = OptionsViewModel(
+        let optionsViewModel = OptionsViewModel(
             importance: viewModel.importance.value,
             color: viewModel.hexColor.value.flatMap({ UIColor.colorWithHexString(hexString: $0) }),
             deadline: viewModel.deadline.value
         )
 
-        let optionsView = OptionsView(viewModel: vm)
+        let optionsView = OptionsView(viewModel: optionsViewModel)
         optionsView.translatesAutoresizingMaskIntoConstraints = false
-        optionsView.backgroundColor = R.Colors.featureBackground
+        optionsView.backgroundColor = Res.Colors.featureBackground
         optionsView.layer.cornerRadius = 16
         return optionsView
     }()
@@ -107,9 +104,9 @@ class DetailsViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Удалить", for: .normal)
         button.layer.cornerRadius = 16
-        button.backgroundColor = R.Colors.featureBackground
-        button.setTitleColor(R.Colors.attentionText, for: .normal)
-        button.setTitleColor(R.Colors.disabledText, for: .disabled)
+        button.backgroundColor = Res.Colors.featureBackground
+        button.setTitleColor(Res.Colors.attentionText, for: .normal)
+        button.setTitleColor(Res.Colors.disabledText, for: .disabled)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         button.addAction(action, for: .touchUpInside)
         button.isEnabled = viewModel.editingMode.value
@@ -159,8 +156,19 @@ class DetailsViewController: UIViewController {
     }
 
     private func addKeyboardObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
     }
 
     private func addGestureRecognizers() {
@@ -170,7 +178,7 @@ class DetailsViewController: UIViewController {
     }
 
     private func setupView() {
-        view.backgroundColor = R.Colors.modalBackground
+        view.backgroundColor = Res.Colors.modalBackground
 
         title = "Дело"
         navigationItem.leftBarButtonItem = leftBarButtonItem
@@ -185,7 +193,10 @@ class DetailsViewController: UIViewController {
         view.addSubview(scrollView)
     }
 
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+    override func willTransition(
+        to newCollection: UITraitCollection,
+        with coordinator: UIViewControllerTransitionCoordinator
+    ) {
         super.willTransition(to: newCollection, with: coordinator)
         if UIDevice.current.orientation.isLandscape {
             optionsView.isHidden = true
@@ -199,6 +210,12 @@ class DetailsViewController: UIViewController {
 
 extension DetailsViewController {
     private func bind() {
+        bindViewModel()
+        bindTextViewViewModel()
+        bindOptionsViewViewModel()
+    }
+
+    private func bindViewModel() {
         viewModel.editingMode.bind { [weak self] in
             self?.removeButton.isEnabled = $0
         }
@@ -214,11 +231,13 @@ extension DetailsViewController {
         viewModel.deadline.bind { [weak self] in
             self?.optionsView.deadlineOptionView.viewModel.date.value = $0
             guard let date = $0 else { return }
-            let dc = Calendar.current.dateComponents([.year, .month, .day], from: date)
+            let dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date)
             let calendarSelection = (self?.optionsView.calendarView.selectionBehavior as? UICalendarSelectionSingleDate)
-            calendarSelection?.setSelected(dc, animated: true)
+            calendarSelection?.setSelected(dateComponents, animated: true)
         }
+    }
 
+    private func bindTextViewViewModel() {
         textView.viewModel.didChangeText = { [weak self] in
             self?.viewModel.text.value = $0
             self?.rightBarButtonItem.isEnabled = !$0.isEmpty
@@ -228,7 +247,9 @@ extension DetailsViewController {
             self?.optionsView.setCalendarVisibility(false)
             self?.optionsView.setColorPickerVisibility(false)
         }
+    }
 
+    private func bindOptionsViewViewModel() {
         optionsView.importanceOptionView.viewModel.didChangeImportance = { [weak self] in
             self?.viewModel.importance.value = $0
         }
@@ -245,9 +266,9 @@ extension DetailsViewController {
 
             let nextDate = Calendar.current.date(byAdding: DateComponents(day: 1), to: Date()) ?? Date()
 
-            let dc = Calendar.current.dateComponents([.year, .month, .day], from: nextDate)
+            let dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: nextDate)
             let calendarSelection = (self?.optionsView.calendarView.selectionBehavior as? UICalendarSelectionSingleDate)
-            calendarSelection?.setSelected(dc, animated: true)
+            calendarSelection?.setSelected(dateComponents, animated: true)
 
             self?.viewModel.deadline.value = enabled ? nextDate : nil
         }
@@ -276,11 +297,11 @@ extension DetailsViewController {
             if !enabled {
                 self?.optionsView.setColorPickerVisibility(false)
             }
-            let color = R.Colors.accentText ?? .blue
+            let color = Res.Colors.accentText ?? .blue
             if enabled {
                 self?.optionsView.colorPickerView.viewModel.setColor(color)
             }
-            self?.textView.viewModel.color.value = (enabled ? color : R.Colors.text) ?? .black
+            self?.textView.viewModel.color.value = (enabled ? color : Res.Colors.text) ?? .black
             self?.viewModel.hexColor.value = enabled ? color.hex() : nil
         }
 

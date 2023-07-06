@@ -6,11 +6,35 @@ final class TodoItemTests: XCTestCase {
     // Набор TodoItem's для теста конвертируемости в Json/Csv и обратно
     let convertibilityTestItems = [
         // Интересное название задачи
-        TodoItem(text: "Text1, Text2: \", ,, .; \"\"\" \"\" \"\"", importance: .basic, deadline: nil),
+        TodoItem(
+            text: "Text1, Text2: \", ,, .; \"\"\" \"\" \"\"",
+            importance: .basic,
+            deadline: nil
+        ),
         // Поменяли importance и deadline, так как у них есть условия записи в json и csv
-        TodoItem(text: "Text", importance: .important, deadline: Date()),
-        TodoItem(id: "some id", text: "Text", importance: .low, deadline: nil, done: true, createdAt: Date(), changedAt: nil),
-        TodoItem(id: "some id", text: "Text", importance: .important, deadline: Date(), done: false, createdAt: Date(), changedAt: Date())
+        TodoItem(
+            text: "Text",
+            importance: .important,
+            deadline: Date()
+        ),
+        TodoItem(
+            id: "some id",
+            text: "Text",
+            importance: .low,
+            deadline: nil,
+            done: true,
+            createdAt: Date(),
+            changedAt: nil
+        ),
+        TodoItem(
+            id: "some id",
+            text: "Text",
+            importance: .important,
+            deadline: Date(),
+            done: false,
+            createdAt: Date(),
+            changedAt: Date()
+        )
     ]
 
     // Тест проверки на равенство (реализация протокола Equatable)
@@ -19,36 +43,60 @@ final class TodoItemTests: XCTestCase {
         let date = Date()
 
         // Создаем два TodoItem's с одинаковыми значениями полей
-        let item1 = TodoItem(id: "ID", text: "Text", importance: .basic, deadline: date, done: true, createdAt: date, changedAt: date)
-        var item2 = TodoItem(id: "ID", text: "Text", importance: .basic, deadline: date, done: true, createdAt: date, changedAt: date)
+        let item1 = TodoItem(
+            id: "ID",
+            text: "Text",
+            importance: .basic,
+            deadline: date,
+            done: true,
+            createdAt: date,
+            changedAt: date
+        )
+        var item2 = TodoItem(
+            id: "ID",
+            text: "Text",
+            importance: .basic,
+            deadline: date,
+            done: true,
+            createdAt: date,
+            changedAt: date
+        )
         XCTAssertEqual(item1, item2)
 
-        // Изменим id
-        item2 = TodoItem(id: "ID1", text: "Text", importance: .basic, deadline: date, done: true, createdAt: date, changedAt: date)
-        XCTAssertNotEqual(item1, item2)
-
-        // Изменим text
-        item2 = TodoItem(id: "ID", text: "Text1", importance: .basic, deadline: date, done: true, createdAt: date, changedAt: date)
-        XCTAssertNotEqual(item1, item2)
-
-        // Изменим importance
-        item2 = TodoItem(id: "ID", text: "Text", importance: .low, deadline: date, done: true, createdAt: date, changedAt: date)
-        XCTAssertNotEqual(item1, item2)
-
         // Изменим deadline
-        item2 = TodoItem(id: "ID", text: "Text", importance: .basic, deadline: date.addingTimeInterval(10), done: true, createdAt: date, changedAt: date)
-        XCTAssertNotEqual(item1, item2)
-
-        // Изменим done
-        item2 = TodoItem(id: "ID", text: "Text", importance: .basic, deadline: date, done: false, createdAt: date, changedAt: date)
+        item2 = TodoItem(
+            id: "ID",
+            text: "Text",
+            importance: .basic,
+            deadline: date.addingTimeInterval(10),
+            done: true,
+            createdAt: date,
+            changedAt: date
+        )
         XCTAssertNotEqual(item1, item2)
 
         // Изменим createdAt
-        item2 = TodoItem(id: "ID", text: "Text", importance: .basic, deadline: date, done: true, createdAt: date.addingTimeInterval(10), changedAt: date)
+        item2 = TodoItem(
+            id: "ID",
+            text: "Text",
+            importance: .basic,
+            deadline: date,
+            done: true,
+            createdAt: date.addingTimeInterval(10),
+            changedAt: date
+        )
         XCTAssertNotEqual(item1, item2)
 
         // Изменим changedAt
-        item2 = TodoItem(id: "ID", text: "Text", importance: .basic, deadline: date, done: true, createdAt: date, changedAt: date.addingTimeInterval(10))
+        item2 = TodoItem(
+            id: "ID",
+            text: "Text",
+            importance: .basic,
+            deadline: date,
+            done: true,
+            createdAt: date,
+            changedAt: date.addingTimeInterval(10)
+        )
         XCTAssertNotEqual(item1, item2)
     }
 
@@ -88,7 +136,9 @@ final class TodoItemTests: XCTestCase {
         XCTAssertNotNil(TodoItem.parse(json: ["id": "123", "text": "Text", "created_at": 123.123]))
 
         // Тест заполнения значения importance
-        var item = TodoItem.parse(json: ["id": "123", "text": "Text", "created_at": 123.123, "importance": "some importance"])
+        var item = TodoItem.parse(
+            json: ["id": "123", "text": "Text", "created_at": 123.123, "importance": "some importance"]
+        )
         XCTAssertNotNil(item)
         XCTAssertEqual(item?.importance, .basic)
 

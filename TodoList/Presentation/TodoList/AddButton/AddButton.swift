@@ -3,7 +3,7 @@ import UIKit
 class AddButton: UIButton {
     private lazy var shadowLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
-        layer.shadowColor = R.Colors.addButtonShadow?.cgColor
+        layer.shadowColor = Res.Colors.addButtonShadow?.cgColor
         layer.shadowRadius = 10
         layer.shadowOpacity = 1
         layer.shadowOffset = CGSize(width: 0, height: 8)
@@ -14,7 +14,7 @@ class AddButton: UIButton {
     private lazy var addButtonImageView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.image = R.Images.addButton
+        view.image = Res.Images.addButton
         return view
     }()
 

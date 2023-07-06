@@ -29,7 +29,7 @@ final class TodoListViewModel {
 
     func fetchTodoItems() {
         fileCache.clear()
-        try? fileCache.importJson(filename: R.fileStorageName)
+        try? fileCache.importJson(filename: Res.fileStorageName)
         items.value = shownItems
     }
 
@@ -52,19 +52,19 @@ final class TodoListViewModel {
         fileCache.add(item: editedItem)
 
         items.value = shownItems
-        try? fileCache.exportJson(filename: R.fileStorageName)
+        try? fileCache.exportJson(filename: Res.fileStorageName)
     }
 
     func add(_ text: String) {
         let item = TodoItem(text: text, importance: .basic)
         fileCache.add(item: item)
         items.value = shownItems
-        try? fileCache.exportJson(filename: R.fileStorageName)
+        try? fileCache.exportJson(filename: Res.fileStorageName)
     }
 
     func remove(todoId: String) {
         fileCache.remove(with: todoId)
         items.value = shownItems
-        try? fileCache.exportJson(filename: R.fileStorageName)
+        try? fileCache.exportJson(filename: Res.fileStorageName)
     }
 }

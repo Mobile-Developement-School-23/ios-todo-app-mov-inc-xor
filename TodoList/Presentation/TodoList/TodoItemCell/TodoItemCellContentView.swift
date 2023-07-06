@@ -41,7 +41,7 @@ class TodoItemCellContentView: UIView, UIContentView {
     private lazy var calendarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = R.Images.calendar
+        imageView.image = Res.Images.calendar
         return imageView
     }()
 
@@ -49,7 +49,7 @@ class TodoItemCellContentView: UIView, UIContentView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 15)
-        label.textColor = R.Colors.disabledText
+        label.textColor = Res.Colors.disabledText
         return label
     }()
 
@@ -71,7 +71,7 @@ class TodoItemCellContentView: UIView, UIContentView {
     private lazy var arrowRightView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = R.Images.arrowRight
+        imageView.image = Res.Images.arrowRight
         return imageView
     }()
 
@@ -105,10 +105,14 @@ class TodoItemCellContentView: UIView, UIContentView {
     private func setDone(config: TodoItemCellConfiguration, done: Bool) {
         if done {
             let attributedText = NSMutableAttributedString(string: config.item.text)
-            attributedText.addAttribute(.strikethroughStyle, value: 1, range: NSRange(location: 0, length: attributedText.length))
+            attributedText.addAttribute(
+                .strikethroughStyle,
+                value: 1,
+                range: NSRange(location: 0, length: attributedText.length)
+            )
 
             textLabel.attributedText = attributedText
-            textLabel.textColor = R.Colors.disabledText
+            textLabel.textColor = Res.Colors.disabledText
         } else {
             textLabel.attributedText = nil
             textLabel.text = config.item.text
@@ -123,8 +127,8 @@ class TodoItemCellContentView: UIView, UIContentView {
 
         setDone(config: config, done: config.item.done)
 
-        importanceImageView.image = config.item.importance == .important ? R.Images.highImportanceIcon :
-                                    config.item.importance == .low ? R.Images.lowImportanceIcon : nil
+        importanceImageView.image = config.item.importance == .important ? Res.Images.highImportanceIcon :
+                                    config.item.importance == .low ? Res.Images.lowImportanceIcon : nil
         importanceImageView.isHidden = importanceImageView.image == nil
 
         deadlineLabel.text = format(config.item.deadline)
@@ -146,7 +150,7 @@ class TodoItemCellContentView: UIView, UIContentView {
 
 extension TodoItemCellContentView {
     private func setup() {
-        backgroundColor = R.Colors.featureBackground
+        backgroundColor = Res.Colors.featureBackground
 
         textContentView.addArrangedSubview(importanceImageView)
         textContentView.addArrangedSubview(textLabel)

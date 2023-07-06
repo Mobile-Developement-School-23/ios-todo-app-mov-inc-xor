@@ -1,6 +1,6 @@
 import UIKit
 
-enum R {
+enum Res {
     static let fileStorageName = "items.json"
 
     enum Colors {

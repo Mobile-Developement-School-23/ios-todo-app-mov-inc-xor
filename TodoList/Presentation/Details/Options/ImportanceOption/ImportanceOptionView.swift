@@ -7,19 +7,19 @@ class ImportanceOptionView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Важность"
-        label.textColor = R.Colors.text
+        label.textColor = Res.Colors.text
         return label
     }()
 
     private lazy var segmentedControl: TodoSegmentedControl = {
         let items: [Any] = [
-            R.Images.lowImportanceIcon.withRenderingMode(.alwaysOriginal),
+            Res.Images.lowImportanceIcon.withRenderingMode(.alwaysOriginal),
             "нет",
-            R.Images.highImportanceIcon.withRenderingMode(.alwaysOriginal)
+            Res.Images.highImportanceIcon.withRenderingMode(.alwaysOriginal)
         ]
 
         let textAttributes = [
-            NSAttributedString.Key.foregroundColor: R.Colors.text ?? .black,
+            NSAttributedString.Key.foregroundColor: Res.Colors.text ?? .black,
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)
         ]
 

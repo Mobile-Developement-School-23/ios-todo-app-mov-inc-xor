@@ -5,14 +5,14 @@ class TodoCheckboxView: UIControl {
 
     private var image: UIImage? {
         if viewModel.checked.value {
-            return R.Images.checkedCheckbox
+            return Res.Images.checkedCheckbox
         }
 
         if viewModel.type.value == .basic {
-            return R.Images.basicCheckbox
+            return Res.Images.basicCheckbox
         }
 
-        return R.Images.importantCheckbox
+        return Res.Images.importantCheckbox
     }
 
     private lazy var imageView: UIImageView = {

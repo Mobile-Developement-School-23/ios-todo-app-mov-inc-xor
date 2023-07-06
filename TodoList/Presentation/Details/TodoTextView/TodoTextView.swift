@@ -10,7 +10,7 @@ class TodoTextView: UITextView, UITextViewDelegate {
         placeholder.translatesAutoresizingMaskIntoConstraints = false
         placeholder.text = "Что надо сделать?"
         placeholder.font = UIFont.systemFont(ofSize: 17)
-        placeholder.textColor = R.Colors.disabledText
+        placeholder.textColor = Res.Colors.disabledText
         placeholder.isHidden = !text.isEmpty
         return placeholder
     }()
@@ -56,7 +56,7 @@ extension TodoTextView {
 
         font = UIFont.systemFont(ofSize: 17)
         textContainerInset = padding
-        backgroundColor = R.Colors.featureBackground
+        backgroundColor = Res.Colors.featureBackground
         textColor = viewModel.color.value
         layer.cornerRadius = 16
         textContainer.lineFragmentPadding = 0

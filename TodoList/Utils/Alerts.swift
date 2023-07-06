@@ -15,7 +15,11 @@ final class Alerts {
         return alertController
     }
 
-    static func makeConfirmAlert(title: String, message: String, handler: @escaping (UIAlertAction) -> Void) -> UIAlertController {
+    static func makeConfirmAlert(
+        title: String,
+        message: String,
+        handler: @escaping (UIAlertAction) -> Void
+    ) -> UIAlertController {
         let confirmAction = UIAlertAction(title: "Удалить", style: .destructive, handler: handler)
         let cancelAction = UIAlertAction(title: "Отменить", style: .cancel)
 

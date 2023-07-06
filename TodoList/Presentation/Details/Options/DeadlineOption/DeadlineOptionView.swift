@@ -14,7 +14,7 @@ class DeadlineOptionView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Сделать до"
-        label.textColor = R.Colors.text
+        label.textColor = Res.Colors.text
         return label
     }()
 
@@ -22,7 +22,7 @@ class DeadlineOptionView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 13)
-        label.textColor = R.Colors.accentText
+        label.textColor = Res.Colors.accentText
         label.layer.opacity = viewModel.date.value == nil ? 0 : 1
         label.isHidden = viewModel.date.value == nil
         return label

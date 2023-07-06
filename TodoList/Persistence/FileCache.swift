@@ -1,9 +1,9 @@
 import Foundation
 
 class FileCache {
-    typealias Id = String
+    typealias TodoItemId = String
 
-    private(set) var items: [Id: TodoItem] = [:]
+    private(set) var items: [TodoItemId: TodoItem] = [:]
 
     @discardableResult
     func add(item: TodoItem) -> TodoItem? {

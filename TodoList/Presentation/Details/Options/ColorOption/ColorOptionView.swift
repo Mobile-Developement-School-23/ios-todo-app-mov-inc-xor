@@ -9,7 +9,7 @@ class ColorOptionView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Цвет"
-        label.textColor = R.Colors.text
+        label.textColor = Res.Colors.text
         return label
     }()
 
@@ -36,16 +36,16 @@ class ColorOptionView: UIView {
     private lazy var hexColorLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = viewModel.color.value?.hex() ?? R.Colors.text?.hex()
+        label.text = viewModel.color.value?.hex() ?? Res.Colors.text?.hex()
         label.font = UIFont.boldSystemFont(ofSize: 13)
-        label.textColor = R.Colors.accentText
+        label.textColor = Res.Colors.accentText
         return label
     }()
 
     private lazy var colorCircle: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = viewModel.color.value ?? R.Colors.text
+        view.backgroundColor = viewModel.color.value ?? Res.Colors.text
         view.layer.cornerRadius = Self.circleDiameter / 2
         return view
     }()
@@ -54,14 +54,14 @@ class ColorOptionView: UIView {
         let action = UIAction { [weak self] in
             guard let sender = $0.sender as? UISwitch else { return }
             if sender.isOn {
-                self?.viewModel.color.value = R.Colors.accentText
+                self?.viewModel.color.value = Res.Colors.accentText
             }
 
             UIView.animate(withDuration: 0.2, delay: 0, options: [.transitionCurlDown]) { [weak self] in
                 self?.colorStackView.isHidden = !sender.isOn
                 self?.colorStackView.layer.opacity = sender.isOn ? 1 : 0
             } completion: { _ in
-                self?.viewModel.color.value = sender.isOn ? R.Colors.accentText : nil
+                self?.viewModel.color.value = sender.isOn ? Res.Colors.accentText : nil
             }
             self?.viewModel.didChangeSwitchValue?(sender.isOn)
         }
@@ -89,8 +89,8 @@ class ColorOptionView: UIView {
 extension ColorOptionView {
     private func bind() {
         viewModel.color.bind { [weak self] color in
-            self?.colorCircle.backgroundColor = color ?? R.Colors.text
-            self?.hexColorLabel.text = color?.hex() ?? R.Colors.text?.hex()
+            self?.colorCircle.backgroundColor = color ?? Res.Colors.text
+            self?.hexColorLabel.text = color?.hex() ?? Res.Colors.text?.hex()
         }
     }
 }

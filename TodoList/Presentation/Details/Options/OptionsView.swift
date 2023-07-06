@@ -6,7 +6,9 @@ class OptionsView: UIView {
     private static let cellHeight: CGFloat = 56
 
     private(set) lazy var importanceOptionView: ImportanceOptionView = {
-        let importance = ImportanceOptionView(viewModel: ImportanceOptionViewModel(importance: viewModel.importance.value))
+        let importanceViewModel = ImportanceOptionViewModel(importance: viewModel.importance.value)
+
+        let importance = ImportanceOptionView(viewModel: importanceViewModel)
         importance.translatesAutoresizingMaskIntoConstraints = false
         return importance
     }()
@@ -57,7 +59,7 @@ class OptionsView: UIView {
     private var separator: UIView {
         let separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.backgroundColor = R.Colors.separator
+        separator.backgroundColor = Res.Colors.separator
         separator.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.scale).isActive = true
         return separator
     }

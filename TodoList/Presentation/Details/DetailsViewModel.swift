@@ -35,9 +35,9 @@ final class DetailsViewModel {
         )
 
         let fileCache = FileCache()
-        try? fileCache.importJson(filename: R.fileStorageName)
+        try? fileCache.importJson(filename: Res.fileStorageName)
         fileCache.add(item: item)
-        try fileCache.exportJson(filename: R.fileStorageName)
+        try fileCache.exportJson(filename: Res.fileStorageName)
 
         changesCompletion?()
     }
@@ -48,9 +48,9 @@ final class DetailsViewModel {
         }
 
         let fileCache = FileCache()
-        try? fileCache.importJson(filename: R.fileStorageName)
+        try? fileCache.importJson(filename: Res.fileStorageName)
         fileCache.remove(with: todoItem.id)
-        try fileCache.exportJson(filename: R.fileStorageName)
+        try fileCache.exportJson(filename: Res.fileStorageName)
 
         self.editingMode.value = false
 
