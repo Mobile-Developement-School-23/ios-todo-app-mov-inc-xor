@@ -1,15 +1,13 @@
 import UIKit
-import CocoaLumberjackSwift
 
-class TodoListViewController: UIViewController {
+class TodoListViewController: UITableViewController {
     var viewModel: TodoListViewModel
 
     private static let cellReuseIdentifier = "todo_cell"
 
     private lazy var doneCountLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = R.Colors.disabledText
+        label.textColor = Res.Colors.disabledText
         label.font = .systemFont(ofSize: 15)
         return label
     }()
@@ -18,62 +16,14 @@ class TodoListViewController: UIViewController {
         let action = UIAction { [weak self] _ in
             guard let showCompleted = self?.viewModel.showCompleted.value else { return }
             self?.viewModel.showCompleted.value = !showCompleted
+            self?.tableView.reloadData()
         }
 
         let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Показать", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 15)
         button.addAction(action, for: .touchUpInside)
         return button
-    }()
-
-    private lazy var topViewsContainer: UIStackView = {
-        let container = UIStackView()
-        container.translatesAutoresizingMaskIntoConstraints = false
-        container.axis = .horizontal
-        container.spacing = 16
-        container.distribution = .fillEqually
-        return container
-    }()
-
-    private lazy var todoListHeightConstraint: NSLayoutConstraint = {
-        let constraint = todoListView.heightAnchor.constraint(equalToConstant: todoListView.contentSize.height)
-        return constraint
-    }()
-
-    private lazy var todoListView: UITableView = {
-        let table = UITableView()
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.delegate = self
-        table.dataSource = self
-        table.isScrollEnabled = false
-        table.bounces = false
-        table.layer.cornerRadius = 16
-        table.clipsToBounds = true
-        table.separatorInset.left = 52
-        table.showsVerticalScrollIndicator = false
-        table.showsHorizontalScrollIndicator = false
-        table.keyboardDismissMode = .onDrag
-        table.register(UITableViewCell.self, forCellReuseIdentifier: Self.cellReuseIdentifier)
-        return table
-    }()
-
-    private lazy var contentView: UIStackView = {
-        let stack = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .vertical
-        stack.distribution = .equalSpacing
-        stack.spacing = 12
-        stack.alignment = .center
-        return stack
-    }()
-
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.alwaysBounceVertical = true
-        return scrollView
     }()
 
     private lazy var addButton: AddButton = {
@@ -90,7 +40,6 @@ class TodoListViewController: UIViewController {
     init(viewModel: TodoListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        DDLogDebug("\(Self.description()) init")
     }
 
     required init?(coder: NSCoder) {
@@ -99,27 +48,22 @@ class TodoListViewController: UIViewController {
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-        DDLogDebug("\(Self.description()) deinit")
     }
 
     override func viewDidLoad() {
         bind()
         setup()
-        addKeyboardObservers()
-    }
-
-    override func viewDidLayoutSubviews() {
-        todoListHeightConstraint.constant = todoListView.contentSize.height
     }
 
     private func presentDetailsView(tableView: UITableView? = nil, indexPath: IndexPath? = nil) {
-        let vm = DetailsViewModel(item: indexPath.flatMap { viewModel.items.value[$0.row] })
-        vm.changesCompletion = { [weak self] in
+        let detailsViewControllerViewModel = DetailsViewModel(item: indexPath.flatMap { viewModel.items.value[$0.row] })
+        detailsViewControllerViewModel.changesCompletion = { [weak self] in
             self?.viewModel.fetchTodoItems()
+            self?.tableView.reloadData()
         }
 
-        let vc = DetailsViewController(viewModel: vm)
-        present(UINavigationController(rootViewController: vc), animated: true)
+        let detailsViewController = DetailsViewController(viewModel: detailsViewControllerViewModel)
+        present(UINavigationController(rootViewController: detailsViewController), animated: true)
 
         if let tableView, let indexPath {
             tableView.deselectRow(at: indexPath, animated: true)
@@ -128,41 +72,10 @@ class TodoListViewController: UIViewController {
 }
 
 extension TodoListViewController {
-    @objc private func keyboardWillShow(_ notification: Notification) {
-        guard
-            let userInfo = notification.userInfo,
-            let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
-        else {
-            return
-        }
-        scrollView.contentInset.bottom += keyboardFrame.height
-    }
-
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        let contentInset = UIEdgeInsets.zero
-        scrollView.contentInset = contentInset
-    }
-
-    private func addKeyboardObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-}
-
-extension TodoListViewController {
     private func bind() {
         viewModel.items.bind { [weak self] _ in
             guard let self else { return }
-
             self.doneCountLabel.text = "Выполнено — \(Array(self.viewModel.allItems.filter { $0.done }).count)"
-            self.todoListView.reloadData()
-            DispatchQueue.main.async {
-                self.view.setNeedsLayout()
-                self.view.layoutIfNeeded()
-
-                self.todoListHeightConstraint.constant = self.todoListView.contentSize.height
-            }
-
         }
 
         viewModel.showCompleted.bind { [weak self] showCompleted in
@@ -179,81 +92,94 @@ extension TodoListViewController {
         title = "Мои дела"
 
         let textAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: R.Colors.text as Any
+            .foregroundColor: Res.Colors.text as Any
         ]
 
         navigationController?.navigationBar.layoutMargins.left = 32
-        navigationController?.view.backgroundColor = R.Colors.appBackground
+        navigationController?.view.backgroundColor = Res.Colors.appBackground
         navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = R.Colors.navBarBackground
+        navigationController?.navigationBar.barTintColor = Res.Colors.navBarBackground
         navigationController?.navigationBar.titleTextAttributes = textAttributes
         navigationController?.navigationBar.largeTitleTextAttributes = textAttributes
         navigationController?.navigationBar.prefersLargeTitles = true
 
-        topViewsContainer.addArrangedSubview(doneCountLabel)
-        topViewsContainer.addArrangedSubview(toggleCompletedButton)
+        tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.backgroundColor = Res.Colors.appBackground
+        tableView.separatorInset.left = 52
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Self.cellReuseIdentifier)
+        tableView.sectionHeaderHeight = 40
+        tableView.keyboardDismissMode = .interactive
 
-        contentView.addArrangedSubview(topViewsContainer)
-        contentView.addArrangedSubview(todoListView)
-
-        scrollView.addSubview(contentView)
-        scrollView.addSubview(addButton)
-
-        view.addSubview(scrollView)
+        view.addSubview(addButton)
 
         NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32),
-
-            topViewsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            topViewsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-
-            todoListView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
-
-            todoListHeightConstraint,
-
             addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            addButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54)
+            addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
     }
 }
 
-extension TodoListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+extension TodoListViewController {
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerWidth = view.frame.size.width
+        let viewWidth = (headerWidth - 16 * 3) / 2
+
+        let header = UIView(frame: CGRect(x: 0, y: 0, width: headerWidth, height: 40))
+        header.autoresizingMask = [.flexibleWidth]
+
+        doneCountLabel.frame = CGRect(x: 16, y: 12, width: viewWidth, height: 20)
+        doneCountLabel.autoresizingMask = [.flexibleWidth]
+
+        toggleCompletedButton.frame = CGRect(x: headerWidth - viewWidth - 16, y: 12, width: viewWidth, height: 20)
+        toggleCompletedButton.autoresizingMask = [.flexibleWidth]
+
+        header.addSubview(doneCountLabel)
+        header.addSubview(toggleCompletedButton)
+
+        return header
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == viewModel.items.value.count {
             return
         }
-
         presentDetailsView(tableView: tableView, indexPath: indexPath)
     }
 
-    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    override func tableView(
+        _ tableView: UITableView,
+        leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+    ) -> UISwipeActionsConfiguration? {
         if indexPath.row == viewModel.items.value.count {
             return nil
         }
 
-        let action = UIContextualAction(style: .normal, title: nil) { [weak self] (_, _, completionHandler) in
-            guard let item = self?.viewModel.items.value[indexPath.row] else {
+        let performAction = UIContextualAction(style: .normal, title: nil) { [weak self] (_, _, completionHandler) in
+            guard let self else {
                 completionHandler(false)
                 return
             }
-            self?.viewModel.setDone(todoId: item.id, !item.done)
+            let item = self.viewModel.items.value[indexPath.row]
+            let newCheckedValue = !item.done
+            self.viewModel.setDone(todoId: item.id, newCheckedValue)
+            if newCheckedValue && !self.viewModel.showCompleted.value {
+                self.tableView.deleteRows(at: [indexPath], with: .right)
+            } else {
+                self.tableView.reloadRows(at: [indexPath], with: .none)
+            }
             completionHandler(true)
         }
-        action.image = R.Images.completedSwipeAction
-        action.backgroundColor = R.Colors.completedSwipeAction
-        return UISwipeActionsConfiguration(actions: [action])
+        performAction.image = Res.Images.completedSwipeAction
+        performAction.backgroundColor = Res.Colors.completedSwipeAction
+        return UISwipeActionsConfiguration(actions: [performAction])
     }
 
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    override func tableView(
+        _ tableView: UITableView,
+        trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
+    ) -> UISwipeActionsConfiguration? {
         if indexPath.row == viewModel.items.value.count {
             return nil
         }
@@ -262,33 +188,37 @@ extension TodoListViewController: UITableViewDelegate {
             self?.presentDetailsView(tableView: tableView, indexPath: indexPath)
             completionHandler(true)
         }
-        detailsAction.image = R.Images.detailsSwipeAction
-        detailsAction.backgroundColor = R.Colors.detailsSwipeAction
+        detailsAction.image = Res.Images.detailsSwipeAction
+        detailsAction.backgroundColor = Res.Colors.detailsSwipeAction
 
         let removeAction = UIContextualAction(style: .normal, title: nil) { [weak self] (_, _, completionHandler) in
             guard let id = self?.viewModel.items.value[indexPath.row].id else {
                 return
             }
             self?.viewModel.remove(todoId: id)
+            self?.tableView.deleteRows(at: [indexPath], with: .left)
             completionHandler(true)
         }
-        removeAction.image = R.Images.removeSwipeAction
-        removeAction.backgroundColor = R.Colors.removeSwipeAction
+        removeAction.image = Res.Images.removeSwipeAction
+        removeAction.backgroundColor = Res.Colors.removeSwipeAction
 
         return UISwipeActionsConfiguration(actions: [removeAction, detailsAction])
     }
 }
 
-extension TodoListViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension TodoListViewController {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.items.value.count + 1
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == viewModel.items.value.count {
             let config = AddTodoItemCellConfiguration()
             config.didTapReturnKey = { [weak self] in
-                self?.viewModel.add($0)
+                guard let self else { return }
+                self.viewModel.add($0)
+                let idx = IndexPath(row: self.viewModel.items.value.count - 1, section: 0)
+                self.tableView.insertRows(at: [idx], with: .fade)
             }
 
             let cell = UITableViewCell()
@@ -300,11 +230,19 @@ extension TodoListViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: Self.cellReuseIdentifier, for: indexPath)
 
         let config = TodoItemCellConfiguration(item: viewModel.items.value[indexPath.row])
-        config.didChangeChecked = { [weak self] in
-            guard let id = self?.viewModel.items.value[indexPath.row].id else {
+        config.didChangeChecked = { [weak self] checked in
+            guard
+                let self,
+                let idx = tableView.indexPath(for: cell)
+            else {
                 return
             }
-            self?.viewModel.setDone(todoId: id, $0)
+            self.viewModel.setDone(todoId: config.item.id, checked)
+            if checked && !self.viewModel.showCompleted.value {
+                self.tableView.deleteRows(at: [idx], with: .right)
+            } else {
+                self.tableView.reloadRows(at: [idx], with: .none)
+            }
         }
 
         cell.contentConfiguration = config

@@ -12,7 +12,7 @@ class TodoSwitch: UISwitch {
     }
 
     private func setup() {
-        onTintColor = R.Colors.switchOnBackground
+        onTintColor = Res.Colors.switchOnBackground
         layer.cornerRadius = frame.height / 2.0
         clipsToBounds = true
 
@@ -21,7 +21,7 @@ class TodoSwitch: UISwitch {
 
     // Хак для корректного изменения цвета фона
     private func setSwitcherBackground() {
-        subviews.first?.subviews.first?.backgroundColor = R.Colors.switchOffBackground
+        subviews.first?.subviews.first?.backgroundColor = Res.Colors.switchOffBackground
     }
 
     override func didChangeValue(forKey key: String) {

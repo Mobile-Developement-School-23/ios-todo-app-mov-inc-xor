@@ -136,75 +136,64 @@ extension TodoItem {
         return fields.joined(separator: "\(Self.csvDelimiter) ")
     }
 
-    static func parse(csv: String) -> TodoItem? {
-        /*
-         Так как split по разделителю не подходит ввиду того,
-         что он может содержаться в поле text, используем регулярные выражения
-        */
+    private static let idRef = Reference(String.self)
+    private static let idCapture = TryCapture(as: idRef) {
+        OneOrMore { .anyGraphemeCluster }
+    } transform: { String($0) }
 
-        // id может состоять из любых печатаемых символов, т.к. задается не только как UUID().uuidString
-        let id = Reference(String.self)
-        let idCapture = TryCapture(as: id) {
-            OneOrMore { .anyGraphemeCluster }
-        } transform: { String($0) }
+    private static let textRef = Reference(String.self)
+    private static let textCapture = TryCapture(as: textRef) {
+        OneOrMore { .any }
+    } transform: { String($0).replacing("\"\"", with: "\"") }
 
-        // text может содержать любые символы
-        let text = Reference(String.self)
-        let textCapture = TryCapture(as: text) {
-            OneOrMore { .any }
-        } transform: { String($0).replacing("\"\"", with: "\"") }
+    private static let importanceRef = Reference(Importance.self)
+    private static let importanceCapture = TryCapture(as: importanceRef) {
+        ChoiceOf {
+            Importance.important.rawValue
+            Importance.low.rawValue
+            ""
+        }
+    } transform: { $0 == "" ? .basic : Importance(rawValue: String($0)) }
 
-        // Может быть "important", "low" или пустой строкой, т.к. .basic мы не сохраняем
-        let importance = Reference(Importance.self)
-        let importanceCapture = TryCapture(as: importance) {
-            ChoiceOf {
-                Importance.important.rawValue
-                Importance.low.rawValue
-                ""
-            }
-        } transform: { $0 == "" ? .basic : Importance(rawValue: String($0)) }
-
-        // Либо вещественное значение, либо пусто
-        let deadline = Reference(Date?.self)
-        let deadlineCapture = TryCapture(as: deadline) {
-            ChoiceOf {
-                /\d+\.\d+/
-                ""
-            }
-        } transform: { $0 == "" ? nil : Date(timeIntervalSince1970: TimeInterval($0)!) }
-
-        let done = Reference(Bool.self)
-        let doneCapture = TryCapture(as: done) {
-            ChoiceOf {
-                "true"
-                "false"
-            }
-        } transform: { Bool(String($0)) }
-
-        let createdAt = Reference(Date.self)
-        let createdAtCapture = TryCapture(as: createdAt) {
+    private static let deadlineRef = Reference(Date?.self)
+    private static let deadlineCapture = TryCapture(as: deadlineRef) {
+        ChoiceOf {
             /\d+\.\d+/
-        } transform: { Date(timeIntervalSince1970: TimeInterval($0)!) }
+            ""
+        }
+    } transform: { $0 == "" ? nil : Date(timeIntervalSince1970: TimeInterval($0)!) }
 
-        let changedAt = Reference(Date?.self)
-        let changedAtCapture = TryCapture(as: changedAt) {
-            ChoiceOf {
-                /\d+\.\d+/
-                ""
-            }
-        } transform: { $0 == "" ? nil : Date(timeIntervalSince1970: TimeInterval($0)!) }
+    private static let doneRef = Reference(Bool.self)
+    private static let doneCapture = TryCapture(as: doneRef) {
+        ChoiceOf {
+            "true"
+            "false"
+        }
+    } transform: { Bool(String($0)) }
 
-        let hexColor = Reference(String?.self)
-        let hexColorCapture = TryCapture(as: hexColor) {
-            /#[A-F0-9] {6}/
-        } transform: { String($0) }
+    private static let createdAtRef = Reference(Date.self)
+    private static let createdAtCapture = TryCapture(as: createdAtRef) {
+        /\d+\.\d+/
+    } transform: { Date(timeIntervalSince1970: TimeInterval($0)!) }
 
-        // Разделитель в нашем регулярном выражении
+    private static let changedAtRef = Reference(Date?.self)
+    private static let changedAtCapture = TryCapture(as: changedAtRef) {
+        ChoiceOf {
+            /\d+\.\d+/
+            ""
+        }
+    } transform: { $0 == "" ? nil : Date(timeIntervalSince1970: TimeInterval($0)!) }
+
+    private static let hexColorRef = Reference(String?.self)
+    private static let hexColorCapture = TryCapture(as: hexColorRef) {
+        /#[A-F0-9] {6}/
+    } transform: { String($0) }
+
+    static func parse(csv: String) -> TodoItem? {
         guard let and = try? Regex("\(csvDelimiter)\\s*") else {
             return nil
         }
 
-        // Шаблон, по которому разбирается вся строка csv-таблицы
         let regex = Regex {
             idCapture
             and
@@ -227,14 +216,14 @@ extension TodoItem {
 
         if let result = try? regex.wholeMatch(in: csv) {
             return TodoItem(
-                id: result[id],
-                text: result[text],
-                importance: result[importance],
-                deadline: result[deadline],
-                done: result[done],
-                createdAt: result[createdAt],
-                changedAt: result[changedAt],
-                hexColor: result[hexColor]
+                id: result[idRef],
+                text: result[textRef],
+                importance: result[importanceRef],
+                deadline: result[deadlineRef],
+                done: result[doneRef],
+                createdAt: result[createdAtRef],
+                changedAt: result[changedAtRef],
+                hexColor: result[hexColorRef]
             )
         }
 
