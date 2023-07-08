@@ -12,7 +12,14 @@ final class DetailsViewModel {
     let deadline: Box<Date?>
     let hexColor: Box<String?>
 
-    init(item: TodoItem? = nil) {
+    let retryManager: RetryManager
+    let networkService: any NetworkingService
+
+    init(
+        retryManager: RetryManager,
+        networkService: any NetworkingService,
+        item: TodoItem? = nil
+    ) {
         self.editingMode = Box(item != nil)
         self.todoItem = item ?? TodoItem(text: "", importance: .basic)
 
@@ -20,8 +27,12 @@ final class DetailsViewModel {
         self.importance = Box(self.todoItem.importance)
         self.deadline = Box(self.todoItem.deadline)
         self.hexColor = Box(self.todoItem.hexColor)
+
+        self.retryManager = retryManager
+        self.networkService = networkService
     }
 
+    @MainActor
     func save() throws {
         let item = TodoItem(
             id: todoItem.id,
@@ -39,9 +50,21 @@ final class DetailsViewModel {
         fileCache.add(item: item)
         try fileCache.exportJson(filename: Res.fileStorageName)
 
+        retryManager.run { [weak self] in
+            guard let self else { return }
+            if self.editingMode.value {
+                try await self.networkService.request(YandexEndpoints.edit(item), get: SingleItemResponse.self)
+            } else {
+                try await self.networkService.request(YandexEndpoints.add(item), get: SingleItemResponse.self)
+            }
+        } onTimeout: { error in
+            print(error)
+        }
+
         changesCompletion?()
     }
 
+    @MainActor
     func remove() throws {
         if !editingMode.value {
             return
@@ -54,6 +77,15 @@ final class DetailsViewModel {
 
         self.editingMode.value = false
 
-        changesCompletion?()
+        retryManager.run { [weak self] in
+            guard let self else { return }
+            try await self.networkService.request(
+                YandexEndpoints.remove(self.todoItem.id),
+                get: SingleItemResponse.self
+            )
+            self.changesCompletion?()
+        } onTimeout: { error in
+            print(error)
+        }
     }
 }

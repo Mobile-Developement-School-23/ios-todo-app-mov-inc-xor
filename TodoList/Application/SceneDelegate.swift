@@ -8,7 +8,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
-        let todoListViewController = TodoListViewController(viewModel: TodoListViewModel())
+        let todoListViewModel = TodoListViewModel(
+            fileCache: FileCache(),
+            networkService: YandexNetworkingService(),
+            retryManager: RetryManager()
+        )
+
+        let todoListViewController = TodoListViewController(viewModel: todoListViewModel)
 
         let rootViewController = UINavigationController(rootViewController: todoListViewController)
 
