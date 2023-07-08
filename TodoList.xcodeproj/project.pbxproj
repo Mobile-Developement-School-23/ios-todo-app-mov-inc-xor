@@ -11,6 +11,9 @@
 		4F09309F2A4DCAA900F94D89 /* AddTodoItemCellContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F09309E2A4DCAA900F94D89 /* AddTodoItemCellContentView.swift */; };
 		4F1318312A4C4781005CDF91 /* TodoCheckboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1318302A4C4781005CDF91 /* TodoCheckboxView.swift */; };
 		4F1318332A4C47FD005CDF91 /* TodoCheckboxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1318322A4C47FD005CDF91 /* TodoCheckboxViewModel.swift */; };
+		4F1ABB8B2A570E30004F8BA8 /* NetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ABB8A2A570E30004F8BA8 /* NetworkingService.swift */; };
+		4F1ABB8D2A57809F004F8BA8 /* YandexNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ABB8C2A57809F004F8BA8 /* YandexNetworkingService.swift */; };
+		4F1ABB902A57812D004F8BA8 /* YandexEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ABB8F2A57812D004F8BA8 /* YandexEndpoints.swift */; };
 		4F308C5A2A4BD8A500A9AC79 /* TodoTextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F308C592A4BD8A500A9AC79 /* TodoTextViewModel.swift */; };
 		4F308C5D2A4BF07300A9AC79 /* TodoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F308C5C2A4BF07300A9AC79 /* TodoListViewController.swift */; };
 		4F308C5F2A4BF08000A9AC79 /* TodoListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F308C5E2A4BF08000A9AC79 /* TodoListViewModel.swift */; };
@@ -32,6 +35,10 @@
 		4F7AB5962A39E9550077AA6C /* TodoItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AB5952A39E9550077AA6C /* TodoItemTests.swift */; };
 		4F7AB5B12A39E9B70077AA6C /* TodoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AB5AF2A39E9B70077AA6C /* TodoItem.swift */; };
 		4F7AB5B22A39E9B70077AA6C /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7AB5B02A39E9B70077AA6C /* FileCache.swift */; };
+		4F9D85882A58152A00EFF44C /* TodoItemNetworkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9D85872A58152A00EFF44C /* TodoItemNetworkModel.swift */; };
+		4F9D858C2A581B7000EFF44C /* YandexResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9D858B2A581B7000EFF44C /* YandexResponses.swift */; };
+		4F9D858E2A581C2700EFF44C /* YandexRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9D858D2A581C2700EFF44C /* YandexRequests.swift */; };
+		4F9D85902A5839E800EFF44C /* RetryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9D858F2A5839E800EFF44C /* RetryManager.swift */; };
 		4FBEBB912A4CD78700470754 /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FBEBB902A4CD78700470754 /* AddButton.swift */; };
 		4FCAAB732A43EF3B009EEB18 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCAAB722A43EF3B009EEB18 /* Alerts.swift */; };
 		4FCAAB752A440D61009EEB18 /* ColorOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCAAB742A440D61009EEB18 /* ColorOptionView.swift */; };
@@ -71,6 +78,9 @@
 		4F09309E2A4DCAA900F94D89 /* AddTodoItemCellContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTodoItemCellContentView.swift; sourceTree = "<group>"; };
 		4F1318302A4C4781005CDF91 /* TodoCheckboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCheckboxView.swift; sourceTree = "<group>"; };
 		4F1318322A4C47FD005CDF91 /* TodoCheckboxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCheckboxViewModel.swift; sourceTree = "<group>"; };
+		4F1ABB8A2A570E30004F8BA8 /* NetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingService.swift; sourceTree = "<group>"; };
+		4F1ABB8C2A57809F004F8BA8 /* YandexNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YandexNetworkingService.swift; sourceTree = "<group>"; };
+		4F1ABB8F2A57812D004F8BA8 /* YandexEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YandexEndpoints.swift; sourceTree = "<group>"; };
 		4F308C592A4BD8A500A9AC79 /* TodoTextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTextViewModel.swift; sourceTree = "<group>"; };
 		4F308C5C2A4BF07300A9AC79 /* TodoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListViewController.swift; sourceTree = "<group>"; };
 		4F308C5E2A4BF08000A9AC79 /* TodoListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListViewModel.swift; sourceTree = "<group>"; };
@@ -96,6 +106,10 @@
 		4F7AB59B2A39E9550077AA6C /* TodoListUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TodoListUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F7AB5AF2A39E9B70077AA6C /* TodoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoItem.swift; sourceTree = "<group>"; };
 		4F7AB5B02A39E9B70077AA6C /* FileCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
+		4F9D85872A58152A00EFF44C /* TodoItemNetworkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemNetworkModel.swift; sourceTree = "<group>"; };
+		4F9D858B2A581B7000EFF44C /* YandexResponses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YandexResponses.swift; sourceTree = "<group>"; };
+		4F9D858D2A581C2700EFF44C /* YandexRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YandexRequests.swift; sourceTree = "<group>"; };
+		4F9D858F2A5839E800EFF44C /* RetryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryManager.swift; sourceTree = "<group>"; };
 		4FBEBB902A4CD78700470754 /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
 		4FCAAB722A43EF3B009EEB18 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		4FCAAB742A440D61009EEB18 /* ColorOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorOptionView.swift; sourceTree = "<group>"; };
@@ -153,6 +167,36 @@
 				4F7AB5B02A39E9B70077AA6C /* FileCache.swift */,
 			);
 			path = Persistence;
+			sourceTree = "<group>";
+		};
+		4F1ABB882A570DF7004F8BA8 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				4F1ABB892A570E03004F8BA8 /* Network */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4F1ABB892A570E03004F8BA8 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				4F1ABB8E2A57811D004F8BA8 /* Yandex */,
+				4F1ABB8A2A570E30004F8BA8 /* NetworkingService.swift */,
+				4F9D858F2A5839E800EFF44C /* RetryManager.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		4F1ABB8E2A57811D004F8BA8 /* Yandex */ = {
+			isa = PBXGroup;
+			children = (
+				4F1ABB8C2A57809F004F8BA8 /* YandexNetworkingService.swift */,
+				4F9D85872A58152A00EFF44C /* TodoItemNetworkModel.swift */,
+				4F1ABB8F2A57812D004F8BA8 /* YandexEndpoints.swift */,
+				4F9D858D2A581C2700EFF44C /* YandexRequests.swift */,
+				4F9D858B2A581B7000EFF44C /* YandexResponses.swift */,
+			);
+			path = Yandex;
 			sourceTree = "<group>";
 		};
 		4F308C582A4BD89400A9AC79 /* TodoTextView */ = {
@@ -246,6 +290,7 @@
 		4F7AB57A2A39E9520077AA6C /* TodoList */ = {
 			isa = PBXGroup;
 			children = (
+				4F1ABB882A570DF7004F8BA8 /* Services */,
 				4FCAAB862A450C3C009EEB18 /* Extensions */,
 				4F5DC5AA2A421CF40045F8B4 /* Resources */,
 				4FD96CEB2A41677A00098CD2 /* Utils */,
@@ -568,12 +613,16 @@
 				4FDF8E112A4154B60027C8F2 /* DetailsViewController.swift in Sources */,
 				4F308C682A4C168300A9AC79 /* TodoItemCellContentView.swift in Sources */,
 				4FBEBB912A4CD78700470754 /* AddButton.swift in Sources */,
+				4F9D858C2A581B7000EFF44C /* YandexResponses.swift in Sources */,
+				4F9D85882A58152A00EFF44C /* TodoItemNetworkModel.swift in Sources */,
 				4FCAAB752A440D61009EEB18 /* ColorOptionView.swift in Sources */,
 				4F7AB5B12A39E9B70077AA6C /* TodoItem.swift in Sources */,
 				4F7AB57C2A39E9520077AA6C /* AppDelegate.swift in Sources */,
 				4F7AB57E2A39E9520077AA6C /* SceneDelegate.swift in Sources */,
 				4F5071BD2A4AF331009B77AF /* TodoSegmentedControl.swift in Sources */,
+				4F9D85902A5839E800EFF44C /* RetryManager.swift in Sources */,
 				4FCAAB822A44F80E009EEB18 /* HSLColorPickerViewModel.swift in Sources */,
+				4F1ABB8B2A570E30004F8BA8 /* NetworkingService.swift in Sources */,
 				4F6A9EF02A56EF22000DA229 /* URLSession + Extension.swift in Sources */,
 				4F09309F2A4DCAA900F94D89 /* AddTodoItemCellContentView.swift in Sources */,
 				4FD96CEA2A415C5E00098CD2 /* DetailsViewModel.swift in Sources */,
@@ -587,6 +636,8 @@
 				4FCAAB902A45161B009EEB18 /* DeadlineOptionViewModel.swift in Sources */,
 				4FCAAB8E2A451316009EEB18 /* ImportanceOptionViewModel.swift in Sources */,
 				4FCAAB7A2A44AB05009EEB18 /* HSLColorPickerView.swift in Sources */,
+				4F9D858E2A581C2700EFF44C /* YandexRequests.swift in Sources */,
+				4F1ABB902A57812D004F8BA8 /* YandexEndpoints.swift in Sources */,
 				4F5DC5B22A422ECB0045F8B4 /* DeadlineOptionView.swift in Sources */,
 				4F5071BB2A4AEE36009B77AF /* TodoSwitch.swift in Sources */,
 				4FCAAB882A450C50009EEB18 /* UIColor + Extension.swift in Sources */,
@@ -594,6 +645,7 @@
 				4F1318312A4C4781005CDF91 /* TodoCheckboxView.swift in Sources */,
 				4F308C662A4C163100A9AC79 /* TodoItemCellConfiguration.swift in Sources */,
 				4FCAAB852A4500EB009EEB18 /* ColorOptionViewModel.swift in Sources */,
+				4F1ABB8D2A57809F004F8BA8 /* YandexNetworkingService.swift in Sources */,
 				4F5DC5B02A422BF90045F8B4 /* ImportanceOptionView.swift in Sources */,
 				4F09309D2A4DCA9C00F94D89 /* AddTodoItemCellConfiguration.swift in Sources */,
 			);

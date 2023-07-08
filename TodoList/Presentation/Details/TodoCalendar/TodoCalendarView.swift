@@ -17,7 +17,6 @@ class TodoCalendarView: UICalendarView {
         calendar = Calendar(identifier: .iso8601)
         locale = Locale(identifier: "ru_RU")
         selectionBehavior = UICalendarSelectionSingleDate(delegate: self)
-        availableDateRange = DateInterval(start: .now, end: .distantFuture)
     }
 }
 
