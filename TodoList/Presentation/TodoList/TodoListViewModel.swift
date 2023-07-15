@@ -29,8 +29,8 @@ final class TodoListViewModel {
     func fetchTodoItems() {
         loading.value = true
 
-        // Загрузим TodoItem's сначала из кэша, чтобы было что показать сразу
-        try? fileCache.importJson(filename: Res.fileStorageName)
+        // Загрузим TodoItem's сначала из локального хранилища, чтобы было что показать сразу
+        try? fileCache.load()
         items = fileCache.items
         tableItems.value = prepareToDisplay(self.items)
 
@@ -50,6 +50,11 @@ final class TodoListViewModel {
                 self.items[$0.key] = $0.value
             }
 
+            self.fileCache.clear()
+            self.items.forEach {
+                self.fileCache.add(item: $0.value)
+            }
+
             self.tableItems.value = self.prepareToDisplay(self.items)
 
             /* Сохраним в сеть в том числе и то, что подрузили из файла,
@@ -61,7 +66,7 @@ final class TodoListViewModel {
             )
 
             // Также сохраним локально
-            try? self.fileCache.exportJson(filename: Res.fileStorageName)
+            try? self.fileCache.save()
 
             self.loading.value = false
         } onTimeout: { [weak self] error in
@@ -110,7 +115,7 @@ final class TodoListViewModel {
         tableItems.value = prepareToDisplay(items)
 
         fileCache.add(item: editedItem)
-        try? fileCache.exportJson(filename: Res.fileStorageName)
+        try? fileCache.save()
 
         loading.value = true
 
@@ -130,7 +135,7 @@ final class TodoListViewModel {
         tableItems.value = prepareToDisplay(items)
 
         fileCache.add(item: item)
-        try? fileCache.exportJson(filename: Res.fileStorageName)
+        try? fileCache.save()
 
         loading.value = true
 
@@ -149,7 +154,7 @@ final class TodoListViewModel {
         tableItems.value = prepareToDisplay(items)
 
         fileCache.remove(with: todoId)
-        try? fileCache.exportJson(filename: Res.fileStorageName)
+        try? fileCache.save()
 
         loading.value = true
 
