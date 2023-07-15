@@ -45,10 +45,10 @@ final class DetailsViewModel {
             hexColor: hexColor.value
         )
 
-        let fileCache = FileCache()
-        try? fileCache.importJson(filename: Res.fileStorageName)
+        let fileCache = FileCache(filename: Res.fileStorageName)
+        try? fileCache.load()
         fileCache.add(item: item)
-        try fileCache.exportJson(filename: Res.fileStorageName)
+        try fileCache.save()
 
         retryManager.run { [weak self] in
             guard let self else { return }
@@ -70,10 +70,10 @@ final class DetailsViewModel {
             return
         }
 
-        let fileCache = FileCache()
-        try? fileCache.importJson(filename: Res.fileStorageName)
+        let fileCache = FileCache(filename: Res.fileStorageName)
+        try? fileCache.load()
         fileCache.remove(with: todoItem.id)
-        try fileCache.exportJson(filename: Res.fileStorageName)
+        try fileCache.save()
 
         self.editingMode.value = false
 

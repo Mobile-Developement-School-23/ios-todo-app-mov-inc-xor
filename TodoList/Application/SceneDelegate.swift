@@ -9,7 +9,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         let todoListViewModel = TodoListViewModel(
-            fileCache: FileCache(),
+            fileCache: FileCache(filename: Res.fileStorageName),
             networkService: YandexNetworkingService(),
             retryManager: RetryManager()
         )
